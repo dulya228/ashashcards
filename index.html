@@ -46,25 +46,31 @@ input[type=range]{padding:0;accent-color:var(--gold)}
 #hand .card{height:108px;max-width:64px}
 .me{background:var(--pan);border:1px solid var(--bd)}
 .bar{display:flex;gap:8px;align-items:center}#msg{flex:1;font-size:13px;color:var(--mut)}#evt{text-align:center;font-size:13px;font-weight:700;color:var(--gold);min-height:17px}
+#evb{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:8;text-align:center;padding:20px;background:radial-gradient(#000b,#0000 75%)}
+#evb.go{display:flex;animation:evp 2.8s ease forwards}
+.e1{font-size:100px;line-height:1;filter:drop-shadow(0 6px 24px #f5c542)}.e2{font-size:26px;font-weight:800;color:var(--gold);text-shadow:0 3px 16px #000;margin-top:12px;max-width:92%}
+@keyframes evp{0%{opacity:0;transform:scale(.4)}12%{opacity:1;transform:scale(1.1)}20%{transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(1.15)}}
+.bl{display:flex;gap:4px;flex-wrap:wrap}.chip{background:#0005;border:1px solid var(--bd);border-radius:10px;padding:1px 6px;font-size:12px;font-weight:700}.chip.tgt{outline:2px solid var(--atk)}
+.card.ks{border-style:dashed}.card.kb{border-radius:5px}
 #end{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-size:28px;font-weight:800;z-index:9}
 </style></head><body>
 <section id="menu"><div class="logo"><b>🃏</b><h1>МЕМ-СТОУН</h1><p>карточная битва мемов</p></div>
 <button class="p" data-go="bot">⚔️ Игра с ботами</button><button class="p" data-go="online">🌐 Онлайн</button>
-<button data-go="decks">🃏 Мои колоды</button><button data-go="set">⚙️ Настройки</button></section>
+<button data-go="decks">🃏 Карточки</button><button data-go="set">⚙️ Настройки</button></section>
 <section id="modes"><h2 id="mt"></h2><div class="grow" id="ml"></div>
 <div id="jn"><input id="ci" maxlength="4" placeholder="Код комнаты друга" style="text-transform:uppercase;margin-bottom:8px"><button class="p" id="jb" style="width:100%">Войти по коду</button><div id="le" style="color:var(--atk);text-align:center;margin-top:6px"></div></div>
 <button data-go="menu">← Назад</button></section>
 <section id="lob"><h2>Комната <span id="lc" style="color:var(--gold)"></span></h2><p id="lm" style="text-align:center;color:var(--mut)"></p><div class="grow" id="ln"></div>
 <button class="p" id="fill">Заполнить ботами и начать</button><button id="lx">← Выйти</button></section>
-<section id="pre"><h2>Перед боем</h2><div>Колода</div><div class="tabs" id="pd"></div><div>Музыка в матче</div><select id="pm"></select><div style="flex:1"></div>
+<section id="pre"><h2>Перед боем</h2><div>Музыка в матче</div><select id="pm"></select><div style="flex:1"></div>
 <button class="p" id="go">В бой ⚔️</button><button id="px">← Назад</button></section>
-<section id="decks"><h2>Мои колоды <small id="dc" style="color:var(--mut)"></small></h2><div class="tabs" id="dt"></div><div class="grow" id="dl"></div>
-<div class="bar"><button id="auto">🎲 Авто</button><button class="p" data-go="menu" style="flex:1">Готово</button></div></section>
+<section id="decks"><h2>Карточки</h2><p style="text-align:center;color:var(--mut);margin:0">Общая колода: карты приходят всем случайно</p><div class="grow" id="dl"></div><button class="p" data-go="menu">← Назад</button></section>
 <section id="set"><h2>Настройки</h2><div>Ник</div><input id="sn" maxlength="12"><div>Громкость</div><input id="sv" type="range" min="0" max="1" step=".05">
 <div>Аватарка</div><div class="bar"><span id="sa" class="ic" style="width:56px;height:56px"></span><input id="sf" type="file" accept="image/*" style="flex:1"><button id="sx">✕</button></div>
 <div>Музыка в лобби</div><select id="sl"></select><div>Музыка в матче по умолчанию</div><select id="sm"></select><div style="flex:1"></div><button class="p" data-go="menu">Готово</button></section>
 <section id="game"><div id="T"></div><div id="mr"><div id="L"></div><div id="C"></div><div id="R"></div></div><div id="pb" class="row bd"></div><div id="ph" class="hero me"></div><div id="hand" class="row"></div><div id="evt"></div>
 <div class="bar"><button id="mus">🎵</button><div id="msg"></div><button class="p" id="endbtn">Конец хода</button></div></section>
+<div id="evb"></div>
 <div id="end"><div id="endt"></div><button class="p" id="again">Ещё раз</button><button id="exit">В меню</button></div>
 <script src="engine.js"></script>
 <script>
@@ -87,32 +93,22 @@ function note(t,s,at){const x=AC.x,p=t.p[s%8],ch=[0,-4,-2,-5][(s>>3)%4],o=(f,w,v
  g.gain.setValueAtTime(v,at);g.gain.exponentialRampToValueAtTime(.001,at+d);os.connect(g);g.connect(AC.g);os.start(at);os.stop(at+d)};
  if(p!=null)o(t.r*2**((p+ch)/12),t.w,.09,.28);if(s%4==0)o(t.r/2*2**(ch/12),'sine',.2,.5)}
 document.addEventListener('pointerdown',()=>{if(!AC.on){AC.on=1;if(!G)playM(cfg.lobby)}},{once:true});
-/* ---- колоды ---- */
-const tot=c=>c.reduce((a,b)=>a+b,0),zero=()=>CARDS.map(()=>0);
-function autoD(){const c=zero();while(tot(c)<N){const i=Math.random()*CARDS.length|0;if(c[i]<MX)c[i]++}return c}
-const idx=c=>c.flatMap((n,i)=>Array(n).fill(i));
+/* ---- карточки ---- */
 const optT=(sel,v)=>{sel.innerHTML=TR.map((t,i)=>`<option value="${i}">${t.n}</option>`).join('');sel.value=v};
-function drawDecks(){$('#dc').textContent=tot(decks[slot])+'/'+N;
- $('#dt').innerHTML=decks.map((d,i)=>`<button data-s="${i}" class="${i==slot?'on':''}">Колода ${i+1}<small>${tot(d)}/${N}</small></button>`).join('');
- $('#dl').innerHTML=CARDS.map((c,i)=>`<div class="dr">${ic(c)}<span class="n">${c[0]}<br><small>🔷${c[2]} ⚔️${c[3]} ❤️${c[4]}</small></span><button data-d="${i}" data-x="-1">−</button><b>${decks[slot][i]}</b><button data-d="${i}" data-x="1">+</button></div>`).join('')}
 const ic=c=>c[5]?`<img class="ic" src="${c[5]}">`:`<span class="ic">${c[1]}</span>`;
-$('#dt').onclick=e=>{const b=e.target.closest('[data-s]');if(b){slot=+b.dataset.s;drawDecks()}};
-$('#dl').onclick=e=>{const b=e.target.closest('[data-d]');if(!b)return;const i=+b.dataset.d,d=+b.dataset.x,c=decks[slot],v=c[i]+d;if(v<0||v>MX||tot(c)+d>N)return;c[i]=v;SV('decks3',decks);drawDecks()};
-$('#auto').onclick=()=>{decks[slot]=autoD();SV('decks3',decks);drawDecks()};
+function drawCards(){$('#dl').innerHTML=CARDS.map(c=>{const f=c[6]&&E.FX[c[6]],k=f?f.k:'m';
+ return`<div class="dr">${ic(c)}<span class="n">${c[0]}<br><small>🔷${c[2]}${k=='m'?' ⚔️'+c[3]:''}${k!='s'?' ❤️'+c[4]:''}${f?' · '+f.d:''}</small></span></div>`}).join('')}
 /* ---- меню ---- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;const t=b.dataset.go;
  if(t=='bot'||t=='online'){kind=t;$('#mt').textContent=t=='bot'?'Игра с ботами':'Онлайн: создай комнату';$('#jn').style.display=t=='online'?'':'none';$('#le').textContent='';go('modes')}
- else if(t=='decks'){drawDecks();go('decks')}else go(t)});
+ else if(t=='decks'){drawCards();go('decks')}else go(t)});
 $('#ml').innerHTML=Object.entries(E.MODES).map(([k,m])=>`<button class="mode" data-m="${k}">${m.name}<small>${m.d}</small></button>`).join('');
 $('#ml').onclick=async e=>{const b=e.target.closest('[data-m]');if(!b)return;mode=b.dataset.m;if(kind=='bot')return openPre();return sendOn({t:'create',mode,name:cfg.name,tok:TOK,av:cfg.avatar||''})};
 $('#jb').onclick=()=>sendOn({t:'join',code:$('#ci').value,name:cfg.name,tok:TOK,av:cfg.avatar||''});
-function openPre(){const ok=decks.map(d=>tot(d)==N);if(!ok[pick])pick=Math.max(0,ok.indexOf(true));
- $('#pd').innerHTML=decks.map((d,i)=>`<button data-p="${i}" class="${i==pick?'on':''}" ${ok[i]?'':'disabled'}>Колода ${i+1}<small>${tot(d)}/${N}</small></button>`).join('');
- $('#go').disabled=!ok.some(x=>x);$('#go').textContent='В бой ⚔️';optT($('#pm'),cfg.match);go('pre')}
-$('#pd').onclick=e=>{const b=e.target.closest('[data-p]');if(b&&!b.disabled){pick=+b.dataset.p;openPre()}};
+function openPre(){$('#go').disabled=false;$('#go').textContent='В бой ⚔️';optT($('#pm'),cfg.match);go('pre')}
 $('#pm').onchange=()=>{cfg.match=+$('#pm').value;SV('cfg',cfg)};
 $('#px').onclick=()=>{if(online)leave();else go('modes')};
-$('#go').onclick=()=>{if(online){tx({t:'deck',cnt:decks[pick]});$('#go').disabled=true;$('#go').textContent='Ждём остальных…'}else startOff()};
+$('#go').onclick=()=>{if(online){tx({t:'deck'});$('#go').disabled=true;$('#go').textContent='Ждём остальных…'}else startOff()};
 /* ---- настройки ---- */
 const showAv=()=>{$('#sa').innerHTML=cfg.avatar?`<img src="${cfg.avatar}" style="width:100%;height:100%;border-radius:9px;object-fit:cover">`:'🙂'};
 $('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=96;const m=Math.min(im.width,im.height);
@@ -138,27 +134,30 @@ function on(m){
  if(m.t=='lobby'){clearTimeout(AC.w);$('#le').textContent='';SS('room',m.code);$('#lc').textContent=m.code;$('#lm').textContent=E.MODES[m.mode].name+' · отправь код друзьям';$('#fill').style.display=m.host?'':'none';
   $('#ln').innerHTML=m.names.map((n,i)=>`<div class="dr"><span class="n">${i+1}. ${n}</span></div>`).join('');go('lob')}
  else if(m.t=='prematch')openPre();else if(m.t=='err'){$('#le').textContent=m.m;if(S&&$('#game').style.display=='flex')finish(m.m)}
- else if(m.t=='avs'){AV=m.a;if(S)render()}else if(m.t=='note')$('#msg').textContent=m.m;
+ else if(m.t=='avs'){AV=m.a;evKey='';if(S)render()}else if(m.t=='note')$('#msg').textContent=m.m;
  else if(m.t=='state'){const first=!S||G===null&&$('#game').style.display!='flex';S=m;sel=null;if(first){go('game');playM(cfg.match)}render()}}
 $('#fill').onclick=()=>tx({t:'fill'});$('#lx').onclick=leave;
 /* ---- игра ---- */
-const rnd=()=>idx(autoD());
-function startOff(){const n=E.MODES[mode].n;G=E.create(mode,[idx(decks[pick]),...Array.from({length:n-1},rnd)],[cfg.name,...Array.from({length:n-1},(_,i)=>'Бот '+(i+1))]);online=false;AV=[cfg.avatar||''];go('game');playM(cfg.match);sync()}
+function startOff(){const n=E.MODES[mode].n;evKey='';G=E.create(mode,[cfg.name,...Array.from({length:n-1},(_,i)=>'Бот '+(i+1))]);online=false;AV=[cfg.avatar||''];go('game');playM(cfg.match);sync()}
 function sync(){if(!G)return;S=E.view(G,0);sel=null;render();if(G.over==null&&G.t!=0)setTimeout(()=>{if(G&&G.over==null&&G.t!=0){E.act(G,G.t,E.bot(G,G.t));sync()}},850)}
 function doAct(m){if(online)tx(m);else if(E.act(G,0,m))sync()}
-const cardH=(c,z,i,p,cls)=>`<div class="card r${c.c>6?3:c.c>4?2:c.c>2?1:0} ${cls||''}" data-z="${z}" data-i="${i}" data-p="${p}"><div class="art">${c.img?`<img src="${c.img}">`:c.e}</div>${z=='hand'?`<i class="cost">${c.c}</i>`:''}<div class="nm">${c.n}</div><i class="a">${c.a}</i><i class="h">${c.h}</i></div>`;
+const kd=c=>c.fx&&E.FX[c.fx]?E.FX[c.fx].k:'m';
+const cardH=(c,z,i,p,cls)=>{const k=kd(c);return`<div class="card r${c.c>6?3:c.c>4?2:c.c>2?1:0} k${k} ${cls||''}" data-z="${z}" data-i="${i}" data-p="${p}"><div class="art">${c.img?`<img src="${c.img}">`:c.e}</div>${z=='hand'?`<i class="cost">${c.c}</i>`:''}<div class="nm">${c.n}</div>${k=='m'?`<i class="a">${c.a}</i>`:''}${k!='s'?`<i class="h">${c.h}</i>`:''}</div>`};
 const av=i=>AV[i]?`<img class="av" src="${AV[i]}">`:`<span class="av">${/^Бот /.test(S.p[i].name)?'🤖':i==S.you?'🙂':'🧑'}</span>`;
+let evKey='';
+function bigEv(){const k=S.evt?S.round+'|'+S.evt:'';if(!k||k==evKey){if(!k)evKey='';return}evKey=k;const[em,...t]=S.evt.split(' '),b=$('#evb');
+ b.innerHTML=`<div class="e1">${em}</div><div class="e2">${t.join(' ')}</div>`;b.classList.remove('go');void b.offsetWidth;b.classList.add('go')}
 function render(){const me=S.p[S.you],my=S.cur==S.you;
  const n=S.p.length,pos=n==2?['T']:n==3?['L','R']:['L','T','R'],H={T:'',L:'',R:''};
- for(let d=1;d<n;d++){const i=(S.you+d)%n,o=S.p[i],sd=pos[d-1]!='T',can=sel!=null&&!o.dead&&o.team!=me.team;
-  H[pos[d-1]]=`<div class="op ${sd?'side':''} ${S.cur==i?'cur':''} ${o.dead?'dead':''}"><div class="hero ${can&&!o.board.length?'tgt':''}" data-z="eh" data-p="${i}"><span>${av(i)} ${o.team==me.team?'🤝':''}${o.dead?'☠️':''}${o.name} ❤️${o.hp}</span><small>🔷${o.mana}/${o.max} 🃏${o.hand}</small></div><div class="row">${o.board.map((c,j)=>cardH(c,'eb',j,i,can?'tgt':'')).join('')}</div></div>`}
+ for(let d=1;d<n;d++){const i=(S.you+d)%n,o=S.p[i],sd=pos[d-1]!='T',can=sel!=null&&!o.dead&&o.team!=me.team,free=can&&!o.board.length;
+  H[pos[d-1]]=`<div class="op ${sd?'side':''} ${S.cur==i?'cur':''} ${o.dead?'dead':''}"><div class="hero ${free?'tgt':''}" data-z="eh" data-p="${i}"><span>${av(i)} ${o.team==me.team?'🤝':''}${o.dead?'☠️':''}${o.name} ❤️${o.hp}</span><small>🔷${o.mana}/${o.max} 🃏${o.hand}</small></div><div class="bl">${o.bld.map((b,j)=>`<span class="chip ${free?'tgt':''}" data-z="eB" data-i="${j}" data-p="${i}">${b.e}${b.h}</span>`).join('')}</div><div class="row">${o.board.map((c,j)=>cardH(c,'eb',j,i,can?'tgt':'')).join('')}</div></div>`}
  $('#T').innerHTML=H.T;['L','R'].forEach(k=>{$('#'+k).innerHTML=H[k];$('#'+k).style.display=H[k]?'block':'none'});
- $('#C').innerHTML=`<div>Раунд ${S.round}</div><b>▶ ${S.p[S.cur].name}</b>`;
+ $('#C').innerHTML=`<div>Раунд ${S.round}</div><b>▶ ${S.p[S.cur].name}</b><div>📚 Общая колода: ${S.deck}</div>`;
  $('#pb').innerHTML=me.board.map((c,i)=>cardH(c,'pb',i,S.you,(c.rdy&&my?'ok ':'')+(sel===i?'sel':''))).join('');
- $('#ph').innerHTML=`<span>${av(S.you)} ${me.name} ❤️ ${me.hp}</span><small>🔷 ${me.mana}/${me.max} · 📚 ${me.deck} · 🎲 ${S.ev-S.round%S.ev}</small>`;
+ $('#ph').innerHTML=`<span>${av(S.you)} ${me.name} ❤️ ${me.hp}</span><span class="bl">${me.bld.map(b=>`<span class="chip">${b.e}${b.h}</span>`).join('')}</span><small>🔷 ${me.mana}/${me.max} (+${me.regen}) · 🎲 ${S.ev-S.round%S.ev}</small>`;
  $('#hand').innerHTML=me.hand.map((c,i)=>cardH(c,'hand',i,S.you,c.c<=me.mana&&my?'ok':'dim')).join('');
  $('#evt').textContent=S.evt?'Событие: '+S.evt:'';$('#msg').textContent=me.dead?'Ты выбыл(а)':my?'Твой ход':'Ходит '+S.p[S.cur].name+'…';$('#endbtn').disabled=!my;
- if(S.over)finish({win:'Победа! 🎉',lose:'Поражение 💀',draw:'Ничья 🤝'}[S.over])}
+ bigEv();if(S.over)finish({win:'Победа! 🎉',lose:'Поражение 💀',draw:'Ничья 🤝'}[S.over])}
 function finish(t){$('#endt').textContent=t;$('#again').style.display=S&&S.over?'':'none';$('#end').style.display='flex'}
 $('#again').onclick=()=>{$('#end').style.display='none';G=null;S=null;openPre()};
 $('#exit').onclick=()=>{$('#end').style.display='none';G=null;leave()};
@@ -167,11 +166,9 @@ $('#mus').onclick=()=>{cfg.match=(cfg.match+1)%TR.length;SV('cfg',cfg);playM(cfg
 document.addEventListener('click',e=>{if(!S||S.cur!=S.you||S.over)return;const t=e.target.closest('#game [data-z]');if(!t)return;const z=t.dataset.z,i=+t.dataset.i,p=+t.dataset.p;
  if(z=='hand')doAct({t:'play',i});
  else if(z=='pb'){sel=S.p[S.you].board[i].rdy?(sel===i?null:i):sel;render()}
- else if(sel!=null&&(z=='eb'||z=='eh')){const o=S.p[p];if(!o||o.dead||o.team==S.p[S.you].team)return;if(z=='eh'&&o.board.length){$('#msg').textContent='Сначала уничтожь карты на столе игрока';return}doAct({t:'atk',i:sel,p,j:z=='eb'?i:null})}});
+ else if(sel!=null&&(z=='eb'||z=='eh'||z=='eB')){const o=S.p[p];if(!o||o.dead||o.team==S.p[S.you].team)return;if(z!='eb'&&o.board.length){$('#msg').textContent='Сначала уничтожь карты на столе игрока';return}doAct(z=='eB'?{t:'atk',i:sel,p,b:i}:{t:'atk',i:sel,p,j:z=='eb'?i:null})}});
 setInterval(()=>{if(ws&&ws.readyState==1)tx({t:'ping'})},25000);
 /* ---- запуск ---- */
 (async()=>{CARDS=await(await fetch('cards.json')).json();E.setCards(CARDS);
- cfg={name:'Игрок',vol:.5,lobby:0,match:1,...LS('cfg',{})};decks=LS('decks3',null);
- if(!Array.isArray(decks)||decks.length!=3||decks.some(d=>d.length!=CARDS.length)){decks=[autoD(),zero(),zero()];SV('decks3',decks)}
- showAv();$('#sn').value=cfg.name;$('#sv').value=cfg.vol;optT($('#sl'),cfg.lobby);optT($('#sm'),cfg.match);go('menu')})();
+ cfg={name:'Игрок',vol:.5,lobby:0,match:1,...LS('cfg',{})};showAv();$('#sn').value=cfg.name;$('#sv').value=cfg.vol;optT($('#sl'),cfg.lobby);optT($('#sm'),cfg.match);go('menu')})();
 </script></body></html>
