@@ -15,8 +15,8 @@ function pump(r){const g=r.g;clearTimeout(r.tm);if(g.over!=null||r.seat[g.t])ret
  r.tm=setTimeout(()=>{if(rooms[r.code]!==r||g.over!=null||r.seat[g.t])return;E.act(g,g.t,E.bot(g,g.t));push(r)},900)}
 const validDeck=c=>Array.isArray(c)&&c.length==CARDS.length&&c.every(n=>Number.isInteger(n)&&n>=0&&n<=MX)&&c.reduce((a,b)=>a+b,0)==N;
 function startGame(r){const n=E.MODES[r.mode].n,hs=r.ws;r.seat=Array.from({length:n},(_,i)=>hs[i]||null);hs.forEach((w,i)=>w.k=i);
- const names=r.seat.map((w,i)=>w?w.name:'Бот '+(i+1)),decks=r.seat.map(w=>w?w.deck.flatMap((c,i)=>Array(c).fill(i)):rnd());
- hs.forEach(w=>w.deck=null);r.g=E.create(r.mode,decks,names);r.avs=r.seat.map(w=>w?w.av:'');r.seat.forEach(w=>w&&send(w,{t:'avs',a:r.avs}));push(r)}
+ const names=r.seat.map((w,i)=>w?w.name:'Бот '+(i+1));
+ hs.forEach(w=>w.deck=null);r.g=E.create(r.mode,names);r.avs=r.seat.map(w=>w?w.av:'');r.seat.forEach(w=>w&&send(w,{t:'avs',a:r.avs}));push(r)}
 const wss=new WebSocketServer({server:srv});
 setInterval(()=>wss.clients.forEach(w=>{if(w.dead)return w.terminate();w.dead=true;w.ping()}),30000);
 wss.on('connection',ws=>{ws.dead=false;ws.on('pong',()=>ws.dead=false);
@@ -31,7 +31,7 @@ wss.on('connection',ws=>{ws.dead=false;ws.on('pong',()=>ws.dead=false);
    j.ws.forEach(w=>w!==ws&&send(w,{t:'note',m:ws.name+' вернулся'}));pump(j)}
   else if(!r)return;
   else if(m.t=='fill'){if(r.ws[0]!==ws||r.started)return;r.started=true;r.ws.forEach(w=>send(w,{t:'prematch'}))}
-  else if(m.t=='deck'){if(!r.started||!validDeck(m.cnt)||(r.g&&r.g.over==null))return;ws.deck=m.cnt;if(r.ws.every(w=>w.deck))startGame(r)}
+  else if(m.t=='deck'){if(!r.started||(r.g&&r.g.over==null))return;ws.deck=1;if(r.ws.every(w=>w.deck))startGame(r)}
   else if(r.g&&r.seat[ws.k]===ws&&E.act(r.g,ws.k,m))push(r)});
  ws.on('close',()=>{const r=ws.room;if(!r)return;r.ws=r.ws.filter(x=>x!==ws);if(r.seat&&r.seat[ws.k]===ws)r.seat[ws.k]=null;
   if(r.g&&r.g.over==null&&ws.tok&&ws.k!=null){const tok=ws.tok;
