@@ -10,7 +10,7 @@ const srv=http.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0]
 const send=(w,o)=>w&&w.readyState==1&&w.send(JSON.stringify(o));
 const rnd=()=>{const c=CARDS.map(()=>0),l=[];while(l.length<N){const i=Math.random()*CARDS.length|0;if(c[i]<MX){c[i]++;l.push(i)}}return l};
 const lobby=r=>r.ws.forEach((w,i)=>send(w,{t:'lobby',code:r.code,mode:r.mode,names:r.ws.map(x=>x.name),host:i==0}));
-function push(r){r.seat.forEach((w,k)=>w&&send(w,E.view(r.g,k)));pump(r)}
+function push(r){const hum=r.seat.filter(Boolean).length;r.seat.forEach((w,k)=>w&&send(w,{...E.view(r.g,k),hum}));pump(r)}
 function pump(r){const g=r.g;clearTimeout(r.tm);if(g.over!=null||r.seat[g.t])return;
  r.tm=setTimeout(()=>{if(rooms[r.code]!==r||g.over!=null||r.seat[g.t])return;E.act(g,g.t,E.bot(g,g.t));push(r)},900)}
 const validDeck=c=>Array.isArray(c)&&c.length==CARDS.length&&c.every(n=>Number.isInteger(n)&&n>=0&&n<=MX)&&c.reduce((a,b)=>a+b,0)==N;
@@ -27,7 +27,7 @@ wss.on('connection',ws=>{ws.dead=false;ws.on('pong',()=>ws.dead=false);
     j.ws.push(ws);ws.room=j;lobby(j);if(j.ws.length==E.MODES[j.mode].n){j.started=true;j.ws.forEach(w=>send(w,{t:'prematch'}))}}}
   else if(m.t=='rejoin'){if(r)return;const j=rooms[String(m.code||'').toUpperCase()],tok=String(m.tok||'').slice(0,20),a=j&&j.away[tok];
    if(!a||!j.g)return send(ws,{t:'err',m:'Партия уже недоступна'});clearTimeout(a.tm);delete j.away[tok];
-   ws.room=j;ws.name=a.name;ws.av=a.av;ws.tok=tok;ws.k=a.k;j.seat[a.k]=ws;j.ws.push(ws);send(ws,{t:'avs',a:j.avs});send(ws,E.view(j.g,a.k));
+   ws.room=j;ws.name=a.name;ws.av=a.av;ws.tok=tok;ws.k=a.k;j.seat[a.k]=ws;j.ws.push(ws);send(ws,{t:'avs',a:j.avs});send(ws,{...E.view(j.g,a.k),hum:j.seat.filter(Boolean).length});
    j.ws.forEach(w=>w!==ws&&send(w,{t:'note',m:ws.name+' вернулся'}));pump(j)}
   else if(!r)return;
   else if(m.t=='fill'){if(r.ws[0]!==ws||r.started)return;r.started=true;r.ws.forEach(w=>send(w,{t:'prematch'}))}
