@@ -31,8 +31,9 @@ setInterval(()=>wss.clients.forEach(w=>{if(w.dead)return w.terminate();w.dead=tr
 wss.on('connection',ws=>{ws.on('error',()=>{});ws.dead=false;ws.on('pong',()=>ws.dead=false);
  ws.on('message',d=>{let m;try{m=JSON.parse(d)}catch{return}if(m.t=='ping')return;
   if(m.t=='list')return send(ws,{t:'list',rooms:Object.values(rooms).filter(x=>!x.started&&!x.priv&&x.ws[0]&&x.ws.length<E.MODES[x.mode].n).map(x=>({code:x.code,mode:E.MODES[x.mode].name,n:x.ws.length,max:E.MODES[x.mode].n,host:x.ws[0].name}))});
-  if(m.t=='top')return send(ws,{t:'top',list:Object.values(P).sort((a,b)=>b.rating-a.rating).slice(0,20)});const r=ws.room;
-  if(m.t=='create'||m.t=='join'){if(r)return;ws.name=cl(m.name)||'Игрок';ws.pid=cl(m.pid).slice(0,24);ws.tok=String(m.tok||'').slice(0,20);ws.av=/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(m.av||'')&&m.av.length<30000?m.av:'';
+  if(m.t=='top'){const all=Object.entries(P).map(([id,p])=>({id,...p})).sort((a,b)=>b.rating-a.rating||b.wins-a.wins),pid=cl(m.pid),i=all.findIndex(x=>x.id==pid);
+   return send(ws,{t:'top',list:all.slice(0,30).map(p=>({name:p.name,rating:p.rating,wins:p.wins,games:p.games,me:p.id==pid})),me:i<0?null:{rank:i+1,rating:all[i].rating},total:all.length,online:wss.clients.size})}const r=ws.room;
+  if(m.t=='create'||m.t=='join'){if(r)return;ws.name=cl(m.name)||'Игрок';ws.pid=cl(m.pid).slice(0,24);if(ws.pid){const q=P[ws.pid]||(P[ws.pid]={name:ws.name,rating:0,wins:0,games:0});q.name=ws.name;save()}ws.tok=String(m.tok||'').slice(0,20);ws.av=/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(m.av||'')&&m.av.length<30000?m.av:'';
    if(m.t=='create'){if(!E.MODES[m.mode])return;const code=Math.random().toString(36).slice(2,6).toUpperCase();ws.room=rooms[code]={code,mode:m.mode,ws:[ws],g:null,seat:null,started:false,away:{},priv:!!m.priv};lobby(ws.room)}
    else{const j=rooms[String(m.code||'').toUpperCase()];if(!j||j.started||j.ws.length>=E.MODES[j.mode].n)return send(ws,{t:'err',m:'Комната не найдена или уже занята'});
     j.ws.push(ws);ws.room=j;lobby(j);if(j.ws.length==E.MODES[j.mode].n){j.started=true;j.ws.forEach(w=>send(w,{t:'prematch'}))}}}
@@ -50,4 +51,4 @@ wss.on('connection',ws=>{ws.on('error',()=>{});ws.dead=false;ws.on('pong',()=>ws
    r.ws.forEach(w=>send(w,{t:'note',m:ws.name+' отключился, за него играет бот (90 с на возвращение)'}));pump(r);return}
   if(!r.ws.length&&!Object.keys(r.away).length){clearTimeout(r.tm);delete rooms[r.code];return}
   if(!r.started)lobby(r);else{r.ws.forEach(w=>send(w,{t:'note',m:ws.name+' вышел, его заменил бот'}));if(r.g&&r.g.over==null)pump(r)}})});
-srv.listen(process.env.PORT||3000,()=>console.log('Мем-Стоун: http://localhost:'+(process.env.PORT||3000)));
+srv.listen(process.env.PORT||3000,()=>console.log('Ash Ash Картi: http://localhost:'+(process.env.PORT||3000)));
