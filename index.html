@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ash-Ash картi</title>
+<title>Мем-Стоун</title>
 <style>
 :root{--bg1:#243056;--bg2:#0b0e1a;--fg:#f2f0e6;--gold:#f5c542;--pan:#ffffff14;--bd:#ffffff26;--atk:#e5484d;--hp:#30a46c;--mana:#3e8bff;--mut:#9aa3c0}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -64,35 +64,57 @@ input[type=range]{padding:0;accent-color:var(--gold)}
 @keyframes fl{0%{transform:scale(.6);opacity:0}20%{opacity:1;transform:scale(1.3)}100%{transform:translateY(-34px);opacity:0}}
 .sw{width:44px;height:44px;border-radius:10px;flex:none;display:grid;place-items:center}h3{margin:8px 0 2px;color:var(--gold)}
 .fr1 .card{border-color:#19f0ff!important;box-shadow:0 0 12px #19f0ffaa}.fr2 .card{border-color:#ffd54a!important;box-shadow:0 0 12px #ffd54aaa}.fr3 .card{border-color:#ff6a00!important;box-shadow:0 0 12px #ff3d00aa}
+section{overflow-y:auto}.logo{margin:3vh 0 1vh!important}.rules p{margin:0 0 10px;line-height:1.4}
+#fxb{position:fixed;left:0;right:0;top:32%;display:none;flex-direction:column;align-items:center;pointer-events:none;z-index:7;text-align:center;gap:4px}
+#fxb.go{display:flex;animation:fxp 1.5s ease forwards}
+#fxb::before{content:'';position:absolute;top:36px;left:50%;width:40px;height:40px;margin-left:-20px;border-radius:50%;border:4px solid var(--c);box-shadow:0 0 40px var(--c);animation:ring 1.1s ease-out forwards}
+.pt{position:absolute;top:36px;left:50%;font-style:normal;animation:pt 1.1s ease-out forwards}
+@keyframes pt{from{transform:translate(0,0) scale(.5);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(1.4);opacity:0}}
+@keyframes ring{to{transform:scale(9);opacity:0}}@keyframes fxp{0%{opacity:0;transform:scale(.6)}15%{opacity:1;transform:scale(1.05)}75%{opacity:1}100%{opacity:0}}
+.fr4 .card{border-color:#8be9ff!important;box-shadow:0 0 12px #8be9ffaa}.fr5 .card{border-color:#ff5ac8!important;box-shadow:0 0 8px #f0f,0 0 16px #0ff}.fr6 .card{border-color:#e6e6e6!important;box-shadow:0 0 10px #000}
 </style></head><body>
-<section id="menu"><div class="logo"><b>🃏</b><h1>Ash Ash Картi</h1><p>карточная битва мемов</p></div>
+<section id="menu"><div class="logo"><b>🃏</b><h1>МЕМ-СТОУН</h1><p>карточная битва мемов</p></div>
 <div class="dr" id="prof" style="justify-content:space-between"></div>
 <button class="p" data-go="bot">⚔️ Игра с ботами</button><button class="p" data-go="online">🌐 Онлайн</button>
-<button data-go="shop">🛍 Магазин</button><button data-go="decks">🃏 Карточки</button><button data-go="set">⚙️ Настройки</button></section>
+<button data-go="top">🏆 Рейтинг</button><button data-go="shop">🛍 Магазин</button><button data-go="decks">🃏 Карточки</button><button data-go="rules">❓ Правила</button><button data-go="set">⚙️ Настройки</button></section>
 <section id="modes"><h2 id="mt"></h2><div class="grow" id="ml"></div>
-<div id="jn"><input id="ci" maxlength="4" placeholder="Код комнаты друга" style="text-transform:uppercase;margin-bottom:8px"><button class="p" id="jb" style="width:100%">Войти по коду</button><div id="le" style="color:var(--atk);text-align:center;margin-top:6px"></div></div>
+<label id="pl" style="display:none"><input type="checkbox" id="pv" style="width:auto"> Скрытая комната (только по коду)</label>
+<div id="jn"><input id="ci" maxlength="4" placeholder="Код комнаты друга" style="text-transform:uppercase;margin-bottom:8px"><button class="p" id="jb" style="width:100%">Войти по коду</button><button data-go="rooms" style="width:100%;margin-top:8px">📋 Список комнат</button><div id="le" style="color:var(--atk);text-align:center;margin-top:6px"></div></div>
 <button data-go="menu">← Назад</button></section>
 <section id="lob"><h2>Комната <span id="lc" style="color:var(--gold)"></span></h2><p id="lm" style="text-align:center;color:var(--mut)"></p><div class="grow" id="ln"></div>
 <button class="p" id="fill">Заполнить ботами и начать</button><button id="lx">← Выйти</button></section>
 <section id="pre"><h2>Перед боем</h2><div>Музыка в матче</div><select id="pm"></select><div style="flex:1"></div>
 <button class="p" id="go">В бой ⚔️</button><button id="px">← Назад</button></section>
 <section id="decks"><h2>Карточки</h2><p style="text-align:center;color:var(--mut);margin:0">Общая колода: карты приходят всем случайно</p><div class="grow" id="dl"></div><button class="p" data-go="menu">← Назад</button></section>
-<section id="shop"><h2>Магазин</h2><div id="wal" style="text-align:center;font-size:20px;font-weight:800"></div><div class="grow" id="sl2"></div><button class="p" data-go="menu">← Назад</button></section>
-<section id="set"><h2>Настройки</h2><div>Ник</div><input id="sn" maxlength="12"><div>Громкость</div><input id="sv" type="range" min="0" max="1" step=".05">
+<section id="shop"><h2>Магазин</h2><div id="wal" style="text-align:center;font-size:20px;font-weight:800"></div><button class="p" id="lb">🎁 Мем-бокс — 🪙 120 (случайный предмет или монеты)</button><div class="grow" id="sl2"></div><button class="p" data-go="menu">← Назад</button></section>
+<section id="top"><h2>🏆 Рейтинг игроков</h2><div class="grow" id="tl"></div><button class="p" data-go="menu">← Назад</button></section>
+<section id="rooms"><h2>📋 Открытые комнаты</h2><div class="grow" id="rl"></div><button data-go="modes">← Назад</button></section>
+<section id="rules"><h2>❓ Правила</h2><div class="grow rules">
+<p><b>Цель.</b> Довести ❤️ баз всех соперников до нуля. Победа команды — когда живы только её игроки.</p>
+<p><b>Ход.</b> В начале хода получаешь +3 маны (🔷; майнеры ⛏ добавляют ещё) и берёшь карту из общей колоды. Мана копится, но не выше запаса: он растёт с каждым твоим ходом до 10, аккумуляторы 🔋 дают +2.</p>
+<p><b>Карты.</b> Существа (⚔️ атака / ❤️ здоровье) выходят на стол (до 7) и бьют со следующего хода. ⚡ Рывок — бьёт сразу. Здания (до 3) стоят у базы и дают бонус, но их можно разрушить. Заклинания срабатывают сразу и уходят.</p>
+<p><b>Атака.</b> Тапни свою готовую карту (жёлтая рамка), затем цель. Урон наносится обеим картам одновременно. <b>Базу и здания врага можно бить, только когда на его столе нет существ.</b> Союзников бить нельзя.</p>
+<p><b>События.</b> Каждые несколько раундов случается событие: взрыв, дождь, раж, разряд и другие. С 11-го раунда включается «затягивание»: базы теряют ❤️.</p>
+<p><b>Режимы.</b> Дуэль, на троих и четверых, команды 2×2, хаос, блиц, королевская битва, рейд на босса, мана-фест.</p>
+<p><b>Награды.</b> За матчи даются монеты 🪙 (лутбоксы и косметика в магазине). Рейтинг ⭐ меняется только в онлайне против людей: победа +25, поражение −15. Выход из матча считается поражением.</p>
+</div><button class="p" data-go="menu">← Назад</button></section>
+<section id="set"><h2>Настройки</h2><div>Ник</div><input id="sn" maxlength="12"><div class="bar"><input type="checkbox" id="sfxc" style="width:auto"><span>Звуковые эффекты карт</span></div><div>Громкость</div><input id="sv" type="range" min="0" max="1" step=".05">
 <div>Аватарка</div><div class="bar"><span id="sa" class="ic" style="width:56px;height:56px"></span><input id="sf" type="file" accept="image/*" style="flex:1"><button id="sx">✕</button></div>
 <div>Музыка в лобби</div><select id="sl"></select><div>Музыка в матче по умолчанию</div><select id="sm"></select><div style="flex:1"></div><button class="p" data-go="menu">Готово</button></section>
 <section id="game"><div id="T"></div><div id="mr"><div id="L"></div><div id="C"></div><div id="R"></div></div><div id="pb" class="row bd"></div><div id="ph" class="hero me"></div><div id="hand" class="row"></div><div id="evt"></div>
 <div class="bar"><button id="mus">🎵</button><div id="msg"></div><button class="p" id="endbtn">Конец хода</button></div></section>
-<div id="evb"></div>
+<div id="evb"></div><div id="fxb"></div>
 <div id="end"><div id="endt"></div><button class="p" id="again">Ещё раз</button><button id="exit">В меню</button></div>
 <script src="engine.js"></script>
 <script>
 const $=s=>document.querySelector(s),E=Engine,N=20,MX=2;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},SV=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const SS=(k,v)=>{try{if(v===undefined)return sessionStorage.getItem(k);v===null?sessionStorage.removeItem(k):sessionStorage.setItem(k,v)}catch(e){}};
+const PID=LS('pid',null)||(t=>(SV('pid',t),t))(Math.random().toString(36).slice(2,12)+Date.now().toString(36));
 const TOK=SS('tok')||(t=>(SS('tok',t),t))(Math.random().toString(36).slice(2,12));
 let prof,awd=false,awText='',PREV={},DMG={},locked=false,AV=[],manual=false,tries=0,CARDS=[],cfg,decks,slot=0,pick=0,kind='bot',mode='duel',ws=null,online=false,G=null,S=null,sel=null;
-const SCR=['menu','modes','lob','pre','decks','set','shop','game'],go=id=>{SCR.forEach(x=>$('#'+x).style.display=x==id?'flex':'none');document.body.style.background=id=='game'&&prof?SHOP.find(x=>x.id==prof.bg).css:'';$('#game').className='fr'+(prof?prof.fr.slice(2):'0');if(id=='menu')showProf()};
+const SCR=['menu','modes','lob','pre','decks','set','shop','top','rooms','rules','game'],go=id=>{SCR.forEach(x=>$('#'+x).style.display=x==id?'flex':'none');document.body.style.background=id=='game'&&prof?SHOP.find(x=>x.id==prof.bg).css:'';$('#game').className='fr'+(prof?prof.fr.slice(2):'0');if(id=='menu')showProf()};
 /* ---- музыка (синтез WebAudio, файлов не нужно) ---- */
 const TR=[{n:'🌙 Чилл',bpm:84,w:'triangle',r:220,p:[0,3,7,10,12,10,7,3]},{n:'⚡ Драйв',bpm:140,w:'square',r:164.8,p:[0,0,7,0,10,0,7,3]},
 {n:'🏰 Эпик',bpm:100,w:'sawtooth',r:146.8,p:[0,7,12,7,15,12,7,3]},{n:'☕ Лоу-фай',bpm:72,w:'sine',r:196,p:[0,null,3,null,7,null,5,null]},{n:'🔇 Без музыки'}];
@@ -105,6 +127,20 @@ function playM(i){stopM();const t=TR[i];if(!t||!t.p)return;
 function note(t,s,at){const x=AC.x,p=t.p[s%8],ch=[0,-4,-2,-5][(s>>3)%4],o=(f,w,v,d)=>{const os=x.createOscillator(),g=x.createGain();os.type=w;os.frequency.value=f;
  g.gain.setValueAtTime(v,at);g.gain.exponentialRampToValueAtTime(.001,at+d);os.connect(g);g.connect(AC.g);os.start(at);os.stop(at+d)};
  if(p!=null)o(t.r*2**((p+ch)/12),t.w,.09,.28);if(s%4==0)o(t.r/2*2**(ch/12),'sine',.2,.5)}
+function sfx(t){if(cfg.sfx===false)return;if(!AC.x){AC.x=new(window.AudioContext||window.webkitAudioContext)();AC.g=AC.x.createGain();AC.g.connect(AC.x.destination);AC.g.gain.value=cfg.vol}
+ AC.x.resume();const x=AC.x,n=x.currentTime,o=(f,f2,w,v,d,at=0)=>{const os=x.createOscillator(),g=x.createGain();os.type=w;os.frequency.setValueAtTime(f,n+at);os.frequency.exponentialRampToValueAtTime(f2,n+at+d);
+ g.gain.setValueAtTime(v,n+at);g.gain.exponentialRampToValueAtTime(.001,n+at+d);os.connect(g);g.connect(AC.g);os.start(n+at);os.stop(n+at+d+.02)};
+ ({hit:()=>o(220,60,'square',.25,.15),play:()=>o(300,500,'triangle',.2,.12),end:()=>o(400,300,'sine',.1,.08),
+ spell:()=>{o(400,1600,'sine',.25,.4);o(600,2000,'triangle',.15,.4,.05)},build:()=>{o(90,40,'sawtooth',.35,.3);o(180,120,'square',.15,.2,.05)},rush:()=>o(200,1200,'sawtooth',.2,.25),
+ ev:()=>{o(150,80,'sawtooth',.3,.6);o(300,600,'square',.12,.5,.15)},win:()=>[523,659,784,1047].forEach((f,i)=>o(f,f,'triangle',.25,.25,i*.14)),
+ lose:()=>[392,330,262,196].forEach((f,i)=>o(f,f*.98,'sawtooth',.2,.3,i*.18)),coin:()=>{o(988,1319,'square',.15,.15);o(1319,1319,'square',.15,.25,.1)}}[t]||(()=>{}))()}
+function pop(id,html,c){const b=$(id);if(c)b.style.setProperty('--c',c);b.innerHTML=html;b.classList.remove('go');void b.offsetWidth;b.classList.add('go')}
+function burst(L,c){const f=E.FX[L.fx]||{d:''};let p='';for(let i=0;i<14;i++){const a=i/14*6.28,d=110+Math.random()*90;p+=`<i class="pt" style="--dx:${Math.cos(a)*d|0}px;--dy:${Math.sin(a)*d|0}px">${['✨','⭐','💥'][i%3]}</i>`}
+ pop('#fxb',`${p}<div class="e1" style="font-size:72px">${L.e}</div><div class="e2" style="font-size:20px">${esc(L.n)}</div><div style="color:#fff;font-size:14px">${f.d.replace(/^\S+ /,'')}</div>`,c)}
+let seen=null;
+function fxOnce(){if(S.seq==null)return;if(seen===null){seen=S.seq;return}if(S.seq==seen)return;seen=S.seq;const L=S.last;if(!L)return;
+ if(L.t=='atk')sfx('hit');else if(L.t=='end')sfx('end');
+ else if(L.t=='play'){if(L.kd=='s'){sfx('spell');burst(L,'#b56bff')}else if(L.kd=='b'){sfx('build');burst(L,'#ffb040')}else if(L.fx=='rush'){sfx('rush');burst(L,'#19f0ff')}else sfx('play')}}
 document.addEventListener('pointerdown',()=>{if(!AC.on){AC.on=1;if(!G)playM(cfg.lobby)}},{once:true});
 /* ---- карточки ---- */
 const optT=(sel,v)=>{sel.innerHTML=TR.map((t,i)=>`<option value="${i}">${t.n}</option>`).join('');sel.value=v};
@@ -113,11 +149,11 @@ function drawCards(){$('#dl').innerHTML=CARDS.map(c=>{const f=c[6]&&E.FX[c[6]],k
  return`<div class="dr">${ic(c)}<span class="n">${c[0]}<br><small>🔷${c[2]}${k=='m'?' ⚔️'+c[3]:''}${k!='s'?' ❤️'+c[4]:''}${f?' · '+f.d:''}</small></span></div>`}).join('')}
 /* ---- меню ---- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;const t=b.dataset.go;
- if(t=='bot'||t=='online'){kind=t;$('#mt').textContent=t=='bot'?'Игра с ботами':'Онлайн: создай комнату';$('#jn').style.display=t=='online'?'':'none';$('#le').textContent='';go('modes')}
- else if(t=='shop'){drawShop();go('shop')}else if(t=='decks'){drawCards();go('decks')}else go(t)});
+ if(t=='bot'||t=='online'){kind=t;$('#mt').textContent=t=='bot'?'Игра с ботами':'Онлайн: создай комнату';$('#jn').style.display=$('#pl').style.display=t=='online'?'':'none';$('#le').textContent='';go('modes')}
+ else if(t=='top'){go('top');loadTop()}else if(t=='rooms'){go('rooms');refreshRooms()}else if(t=='shop'){drawShop();go('shop')}else if(t=='decks'){drawCards();go('decks')}else go(t)});
 $('#ml').innerHTML=Object.entries(E.MODES).map(([k,m])=>`<button class="mode" data-m="${k}">${m.name}<small>${m.d}</small></button>`).join('');
-$('#ml').onclick=async e=>{const b=e.target.closest('[data-m]');if(!b)return;mode=b.dataset.m;if(kind=='bot')return openPre();return sendOn({t:'create',mode,name:cfg.name,tok:TOK,av:cfg.avatar||''})};
-$('#jb').onclick=()=>sendOn({t:'join',code:$('#ci').value,name:cfg.name,tok:TOK,av:cfg.avatar||''});
+$('#ml').onclick=async e=>{const b=e.target.closest('[data-m]');if(!b)return;mode=b.dataset.m;if(kind=='bot')return openPre();return sendOn({t:'create',priv:$('#pv').checked,mode,name:myName(),pid:PID,tok:TOK,av:cfg.avatar||''})};
+$('#jb').onclick=()=>sendOn({t:'join',code:$('#ci').value,name:myName(),pid:PID,tok:TOK,av:cfg.avatar||''});
 function openPre(){$('#go').disabled=false;$('#go').textContent='В бой ⚔️';optT($('#pm'),cfg.match);go('pre')}
 $('#pm').onchange=()=>{cfg.match=+$('#pm').value;SV('cfg',cfg)};
 $('#px').onclick=()=>{if(online)leave();else go('modes')};
@@ -125,23 +161,44 @@ $('#go').onclick=()=>{if(online){tx({t:'deck'});$('#go').disabled=true;$('#go').
 /* ---- профиль, награды, магазин ---- */
 const SHOP=[{id:'bg0',t:'bg',n:'Классика',p:0,css:'radial-gradient(120% 90% at 50% 0,#243056,#0b0e1a)'},
 {id:'bg1',t:'bg',n:'Зелёное сукно',p:100,css:'radial-gradient(100% 80% at 50% 30%,#1f7a4a,#0a2b1a)'},
+{id:'bg6',t:'bg',n:'Океан',p:120,css:'linear-gradient(180deg,#0f4c81,#052040)'},
 {id:'bg2',t:'bg',n:'Ночной город',p:150,css:'linear-gradient(160deg,#3a1c71,#d76d77 55%,#1a0b2e)'},
+{id:'bg8',t:'bg',n:'Лаванда',p:180,css:'linear-gradient(180deg,#7a6bd6,#2b2260)'},
 {id:'bg3',t:'bg',n:'Закат',p:200,css:'linear-gradient(180deg,#ff9a3c,#c2416b 50%,#2b1055)'},
 {id:'bg4',t:'bg',n:'Матрица',p:250,css:'repeating-linear-gradient(0deg,#00ff6612 0 2px,transparent 2px 22px),linear-gradient(#001a0a,#000)'},
+{id:'bg7',t:'bg',n:'Космос',p:300,css:'radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#fff,transparent),radial-gradient(1px 1px at 85% 15%,#fff,transparent),linear-gradient(#0d0221,#000)'},
+{id:'bg9',t:'bg',n:'Кровавая луна',p:350,css:'radial-gradient(60% 40% at 50% 15%,#c1121f,#1a0000)'},
 {id:'bg5',t:'bg',n:'Золото',p:400,css:'radial-gradient(90% 70% at 50% 20%,#8a6a1c,#2a1e05)'},
 {id:'fr0',t:'fr',n:'Стандартные',p:0,css:'#0006'},{id:'fr1',t:'fr',n:'Неон',p:150,css:'#0006;border:2px solid #19f0ff;box-shadow:0 0 8px #19f0ff'},
-{id:'fr2',t:'fr',n:'Золотые',p:300,css:'#0006;border:2px solid #ffd54a;box-shadow:0 0 8px #ffd54a'},{id:'fr3',t:'fr',n:'Огненные',p:300,css:'#0006;border:2px solid #ff6a00;box-shadow:0 0 8px #ff3d00'}];
+{id:'fr4',t:'fr',n:'Ледяные',p:200,css:'#0006;border:2px solid #8be9ff;box-shadow:0 0 8px #8be9ff'},
+{id:'fr6',t:'fr',n:'Тёмные',p:250,css:'#0006;border:2px solid #e6e6e6'},
+{id:'fr2',t:'fr',n:'Золотые',p:300,css:'#0006;border:2px solid #ffd54a;box-shadow:0 0 8px #ffd54a'},
+{id:'fr3',t:'fr',n:'Огненные',p:300,css:'#0006;border:2px solid #ff6a00;box-shadow:0 0 8px #ff3d00'},
+{id:'fr5',t:'fr',n:'Ультра',p:500,css:'#0006;border:2px solid #ff5ac8;box-shadow:0 0 8px #f0f,0 0 14px #0ff'},
+{id:'bd0',t:'bd',n:'Без значка',p:0,em:'—'},{id:'bd1',t:'bd',n:'Огонь',p:50,em:'🔥'},{id:'bd2',t:'bd',n:'Звезда',p:80,em:'⭐'},{id:'bd3',t:'bd',n:'Лягушонок',p:100,em:'🐸'},
+{id:'bd4',t:'bd',n:'Крутой',p:120,em:'😎'},{id:'bd5',t:'bd',n:'Алмаз',p:250,em:'💎'},{id:'bd6',t:'bd',n:'Корона',p:400,em:'👑'}];
+const myName=()=>{const b=SHOP.find(x=>x.id==prof.bd);return(b&&prof.bd!='bd0'?b.em+' ':'')+cfg.name};
 function drawShop(){$('#wal').textContent='🪙 '+prof.coins;let last='';
- $('#sl2').innerHTML=SHOP.map(it=>{const own=prof.own.includes(it.id),on=prof[it.t]==it.id,h=it.t!=last?`<h3>${it.t=='bg'?'Фон стола':'Рамки карт'}</h3>`:'';last=it.t;
-  return h+`<div class="dr"><span class="sw" style="background:${it.css}"></span><span class="n">${it.n}</span><button data-b="${it.id}" ${on||(!own&&prof.coins<it.p)?'disabled':''}>${on?'✓ Выбрано':own?'Выбрать':'🪙 '+it.p}</button></div>`}).join('')}
+ $('#sl2').innerHTML=SHOP.map(it=>{const own=prof.own.includes(it.id),on=prof[it.t]==it.id,h=it.t!=last?`<h3>${{bg:'Фон стола',fr:'Рамки карт',bd:'Значки у ника'}[it.t]}</h3>`:'';last=it.t;
+  return h+`<div class="dr"><span class="sw" style="background:${it.css||'#0006'}">${it.em||''}</span><span class="n">${it.n}</span><button data-b="${it.id}" ${on||(!own&&prof.coins<it.p)?'disabled':''}>${on?'✓ Выбрано':own?'Выбрать':'🪙 '+it.p}</button></div>`}).join('')}
 $('#sl2').onclick=e=>{const b=e.target.closest('[data-b]');if(!b)return;const it=SHOP.find(x=>x.id==b.dataset.b);
  if(!prof.own.includes(it.id)){if(prof.coins<it.p)return;prof.coins-=it.p;prof.own.push(it.id)}prof[it.t]=it.id;SV('prof',prof);drawShop()};
 function showProf(){const r=prof.rating,t=r<100?'Новичок':r<250?'Мемолог':r<500?'Мем-лорд':'Легенда';
- $('#prof').innerHTML=`<span style="display:flex;gap:10px;align-items:center">${cfg.avatar?`<img class="av" style="width:40px;height:40px" src="${cfg.avatar}">`:'<span class="av" style="width:40px;height:40px;font-size:24px">🙂</span>'}<span>${cfg.name}<br><small style="color:var(--mut)">${t} · ⭐${r} · 🏆${prof.wins}/${prof.games}</small></span></span><b>🪙 ${prof.coins}</b>`}
+ $('#prof').innerHTML=`<span style="display:flex;gap:10px;align-items:center">${cfg.avatar?`<img class="av" style="width:40px;height:40px" src="${cfg.avatar}">`:'<span class="av" style="width:40px;height:40px;font-size:24px">🙂</span>'}<span>${esc(cfg.name)}<br><small style="color:var(--mut)">${t} · ⭐${r} · 🏆${prof.wins}/${prof.games}</small></span></span><b>🪙 ${prof.coins}</b>`}
 function award(){const n=S.p.length,mu=n>2?1.5:1,real=online&&(S.hum||0)>=2,w=S.over=='win',d=S.over=='draw',
- coins=Math.round((real?(w?40:d?15:10):(w?15:d?5:3))*mu),rt=real?(w?25:d?0:-15):0;
- prof.coins+=coins;prof.rating=Math.max(0,prof.rating+rt);prof.games++;if(w)prof.wins++;SV('prof',prof);
- return`+${coins} 🪙`+(real?` · ${rt>=0?'+':''}${rt} ⭐`:' · рейтинг растёт только в онлайне против людей')}
+ coins=Math.round((real?(w?40:d?15:10):(w?15:d?5:3))*mu);prof.coins+=coins;prof.games++;if(w)prof.wins++;SV('prof',prof);sfx(w?'win':d?'end':'lose');
+ return`+${coins} 🪙`+(real?' · ⭐ считаем…':' · рейтинг растёт только онлайн против людей')}
+$('#lb').onclick=()=>{if(prof.coins<120)return;prof.coins-=120;const un=SHOP.filter(x=>x.p>0&&!prof.own.includes(x.id));let e,n;
+ if(!un.length||Math.random()<.25){const c=[30,60,90,150][Math.random()*4|0];prof.coins+=c;e='🪙';n='+'+c+' монет'}
+ else{const w=un.map(x=>1/x.p),t=w.reduce((a,b)=>a+b);let r=Math.random()*t,i=0;while(r>w[i]&&i<un.length-1){r-=w[i];i++}const it=un[i];prof.own.push(it.id);e=it.em||(it.t=='bg'?'🖼':'🃏');n=it.n}
+ SV('prof',prof);sfx('coin');pop('#evb',`<div class="e1">${e}</div><div class="e2">Выпало: ${n}</div>`);drawShop()};
+async function loadTop(){$('#tl').textContent='Загрузка…';if(!await conn()){$('#tl').textContent='Сервер недоступен';return}tx({t:'top'})}
+function showTop(l){$('#tl').innerHTML=l.length?l.map((p,i)=>`<div class="dr"><b style="width:30px">${['🥇','🥈','🥉'][i]||i+1}</b><span class="n">${esc(p.name)}<br><small>🏆 ${p.wins}/${p.games}</small></span><b>⭐ ${p.rating}</b></div>`).join(''):'Пока пусто: сыграй онлайн с другом!'}
+async function refreshRooms(){if($('#rooms').style.display!='flex')return;if(await conn())tx({t:'list'})}
+setInterval(refreshRooms,4000);
+function showRooms(l){$('#rl').innerHTML=l.length?l.map(r=>`<button class="mode" data-rc="${r.code}">${esc(r.mode)}<small>Хост: ${esc(r.host)} · ${r.n}/${r.max} · код ${r.code}</small></button>`).join(''):'Открытых комнат нет. Создай свою!'}
+$('#rl').onclick=e=>{const b=e.target.closest('[data-rc]');if(!b)return;$('#ci').value=b.dataset.rc;kind='online';$('#mt').textContent='Онлайн';go('modes');$('#jb').click()};
+$('#sfxc').onchange=()=>{cfg.sfx=$('#sfxc').checked;SV('cfg',cfg)};
 /* ---- настройки ---- */
 const showAv=()=>{$('#sa').innerHTML=cfg.avatar?`<img src="${cfg.avatar}" style="width:100%;height:100%;border-radius:9px;object-fit:cover">`:'🙂'};
 $('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=96;const m=Math.min(im.width,im.height);
@@ -165,29 +222,29 @@ const tx=o=>ws&&ws.readyState==1&&ws.send(JSON.stringify(o));
 function leave(){manual=true;tries=0;SS('room',null);if(ws)ws.close();ws=null;online=false;S=null;go('menu');playM(cfg.lobby)}
 function on(m){
  if(m.t=='lobby'){clearTimeout(AC.w);$('#le').textContent='';SS('room',m.code);$('#lc').textContent=m.code;$('#lm').textContent=E.MODES[m.mode].name+' · отправь код друзьям';$('#fill').style.display=m.host?'':'none';
-  $('#ln').innerHTML=m.names.map((n,i)=>`<div class="dr"><span class="n">${i+1}. ${n}</span></div>`).join('');go('lob')}
+  $('#ln').innerHTML=m.names.map((n,i)=>`<div class="dr"><span class="n">${i+1}. ${esc(n)}</span></div>`).join('');go('lob')}
  else if(m.t=='prematch')openPre();else if(m.t=='err'){$('#le').textContent=m.m;if(S&&$('#game').style.display=='flex')finish(m.m)}
- else if(m.t=='avs'){AV=m.a;evKey='';awd=false;if(S)render()}else if(m.t=='note')$('#msg').textContent=m.m;
+ else if(m.t=='reward'){prof.rating=m.rating;SV('prof',prof);awText=awText.replace(' · ⭐ считаем…','')+` · ${m.delta>=0?'+':''}${m.delta} ⭐`;const q=$('#endt small');if(q)q.textContent=awText}else if(m.t=='top')showTop(m.list);else if(m.t=='list')showRooms(m.rooms);else if(m.t=='avs'){AV=m.a;evKey='';awd=false;seen=null;if(S)render()}else if(m.t=='note')$('#msg').textContent=m.m;
  else if(m.t=='state'){locked=false;const first=!S||G===null&&$('#game').style.display!='flex';S=m;sel=null;if(first){go('game');playM(cfg.match)}render()}}
 $('#fill').onclick=()=>tx({t:'fill'});$('#lx').onclick=leave;
 /* ---- игра ---- */
-function startOff(){const n=E.MODES[mode].n;evKey='';awd=false;G=E.create(mode,[cfg.name,...Array.from({length:n-1},(_,i)=>'Бот '+(i+1))]);online=false;AV=[cfg.avatar||''];go('game');playM(cfg.match);sync()}
+function startOff(){const n=E.MODES[mode].n;evKey='';awd=false;seen=null;G=E.create(mode,[myName(),...Array.from({length:n-1},(_,i)=>'Бот '+(i+1))]);online=false;AV=[cfg.avatar||''];go('game');playM(cfg.match);sync()}
 function sync(){if(!G)return;S=E.view(G,0);sel=null;render();if(G.over==null&&G.t!=0)setTimeout(()=>{if(G&&G.over==null&&G.t!=0){E.act(G,G.t,E.bot(G,G.t));sync()}},850)}
 function doAct(m){if(online){if(locked)return;locked=true;setTimeout(()=>locked=false,1500);sel=null;tx(m)}else if(E.act(G,0,m))sync()}
 const kd=c=>c.fx&&E.FX[c.fx]?E.FX[c.fx].k:'m';
 const cardH=(c,z,i,p,cls)=>{const k=kd(c);return`<div class="card r${c.c>6?3:c.c>4?2:c.c>2?1:0} k${k} ${cls||''}" data-z="${z}" data-i="${i}" data-p="${p}"><div class="art">${c.img?`<img src="${c.img}">`:c.e}</div>${z=='hand'?`<i class="cost">${c.c}</i>`:''}<div class="nm">${c.n}</div>${k=='m'?`<i class="a">${c.a}</i>`:''}${k!='s'?`<i class="h">${c.h}</i>`:''}${DMG[c.id]?`<b class="fl">−${DMG[c.id]}</b>`:''}</div>`};
 const av=i=>AV[i]?`<img class="av" src="${AV[i]}">`:`<span class="av">${/^Бот /.test(S.p[i].name)?'🤖':i==S.you?'🙂':'🧑'}</span>`;
 let evKey='';
-function bigEv(){const k=S.evt?S.round+'|'+S.evt:'';if(!k||k==evKey){if(!k)evKey='';return}evKey=k;const[em,...t]=S.evt.split(' '),b=$('#evb');
+function bigEv(){const k=S.evt?S.round+'|'+S.evt:'';if(!k||k==evKey){if(!k)evKey='';return}evKey=k;sfx('ev');const[em,...t]=S.evt.split(' '),b=$('#evb');
  b.innerHTML=`<div class="e1">${em}</div><div class="e2">${t.join(' ')}</div>`;b.classList.remove('go');void b.offsetWidth;b.classList.add('go')}
-function render(){const me=S.p[S.you],my=S.cur==S.you;DMG={};const cu={};S.p.forEach(o=>[...o.board,...o.bld].forEach(c=>{cu[c.id]=c.h;if(PREV[c.id]>c.h)DMG[c.id]=PREV[c.id]-c.h}));PREV=cu;
+function render(){const me=S.p[S.you],my=S.cur==S.you;DMG={};const cu={};S.p.forEach(o=>[...o.board,...o.bld].forEach(c=>{cu[c.id]=c.h;if(PREV[c.id]>c.h)DMG[c.id]=PREV[c.id]-c.h}));PREV=cu;fxOnce();
  const n=S.p.length,pos=n==2?['T']:n==3?['L','R']:['L','T','R'],H={T:'',L:'',R:''};
  for(let d=1;d<n;d++){const i=(S.you+d)%n,o=S.p[i],sd=pos[d-1]!='T',can=sel!=null&&!o.dead&&o.team!=me.team,free=can&&!o.board.length;
-  H[pos[d-1]]=`<div class="op ${sd?'side':''} ${S.cur==i?'cur':''} ${o.dead?'dead':''}"><div class="hero ${free?'tgt':''}" data-z="eh" data-p="${i}"><span>${av(i)} ${o.team==me.team?'🤝':''}${o.dead?'☠️':''}${o.name} ❤️${o.hp}</span><small>🔷${o.mana}/${o.max} 🃏${o.hand}</small></div><div class="bl">${o.bld.map((b,j)=>`<span class="chip ${free?'tgt':''}" data-z="eB" data-i="${j}" data-p="${i}">${b.e}${b.h}</span>`).join('')}</div><div class="row">${o.board.map((c,j)=>cardH(c,'eb',j,i,can?'tgt':'')).join('')}</div></div>`}
+  H[pos[d-1]]=`<div class="op ${sd?'side':''} ${S.cur==i?'cur':''} ${o.dead?'dead':''}"><div class="hero ${free?'tgt':''}" data-z="eh" data-p="${i}"><span>${av(i)} ${o.team==me.team?'🤝':''}${o.dead?'☠️':''}${esc(o.name)} ❤️${o.hp}</span><small>🔷${o.mana}/${o.max} 🃏${o.hand}</small></div><div class="bl">${o.bld.map((b,j)=>`<span class="chip ${free?'tgt':''}" data-z="eB" data-i="${j}" data-p="${i}">${b.e}${b.h}</span>`).join('')}</div><div class="row">${o.board.map((c,j)=>cardH(c,'eb',j,i,can?'tgt':'')).join('')}</div></div>`}
  $('#T').innerHTML=H.T;['L','R'].forEach(k=>{$('#'+k).innerHTML=H[k];$('#'+k).style.display=H[k]?'block':'none'});
- $('#C').innerHTML=`<div>Раунд ${S.round}</div><b>▶ ${S.p[S.cur].name}</b><div>📚 Общая колода: ${S.deck}</div>`;
+ $('#C').innerHTML=`<div>Раунд ${S.round}</div><b>▶ ${esc(S.p[S.cur].name)}</b><div>📚 Общая колода: ${S.deck}</div><small>${S.last?esc(S.last.txt||''):''}</small>`;
  $('#pb').innerHTML=me.board.map((c,i)=>cardH(c,'pb',i,S.you,(c.rdy&&my?'ok ':'')+(sel===i?'sel':''))).join('');
- $('#ph').innerHTML=`<span>${av(S.you)} ${me.name} ❤️ ${me.hp}</span><span class="bl">${me.bld.map(b=>`<span class="chip">${b.e}${b.h}</span>`).join('')}</span><small>🔷 ${me.mana}/${me.max} (+${me.regen}) · 🎲 ${S.ev-S.round%S.ev}</small>`;
+ $('#ph').innerHTML=`<span>${av(S.you)} ${esc(me.name)} ❤️ ${me.hp}</span><span class="bl">${me.bld.map(b=>`<span class="chip">${b.e}${b.h}</span>`).join('')}</span><small>🔷 ${me.mana}/${me.max} (+${me.regen}) · 🎲 ${S.ev-S.round%S.ev}</small>`;
  $('#hand').innerHTML=me.hand.map((c,i)=>cardH(c,'hand',i,S.you,c.c<=me.mana&&my?'ok':'dim')).join('');
  $('#evt').textContent=S.evt?'Событие: '+S.evt:'';$('#msg').textContent=me.dead?'Ты выбыл(а)':my?'Твой ход':'Ходит '+S.p[S.cur].name+'…';$('#endbtn').disabled=!my;
  bigEv();if(S.over){if(!awd){awd=true;awText=award()}finish({win:'Победа! 🎉',lose:'Поражение 💀',draw:'Ничья 🤝'}[S.over]+'<br><small style="color:var(--gold);font-size:16px">'+awText+'</small>')}}
@@ -203,5 +260,5 @@ document.addEventListener('click',e=>{if(!S||S.cur!=S.you||S.over)return;const t
 setInterval(()=>{if(ws&&ws.readyState==1)tx({t:'ping'})},25000);
 /* ---- запуск ---- */
 (async()=>{CARDS=await(await fetch('cards.json')).json();E.setCards(CARDS);
- cfg={name:'Игрок',vol:.5,lobby:0,match:1,...LS('cfg',{})};prof={coins:0,rating:0,wins:0,games:0,own:['bg0','fr0'],bg:'bg0',fr:'fr0',...LS('prof',{})};showAv();$('#sn').value=cfg.name;$('#sv').value=cfg.vol;optT($('#sl'),cfg.lobby);optT($('#sm'),cfg.match);go('menu')})();
+ cfg={name:'Игрок',vol:.5,lobby:0,match:1,...LS('cfg',{})};prof={coins:0,rating:0,wins:0,games:0,own:['bg0','fr0','bd0'],bg:'bg0',fr:'fr0',bd:'bd0',...LS('prof',{})};if(!prof.own.includes('bd0'))prof.own.push('bd0');showAv();$('#sfxc').checked=cfg.sfx!==false;$('#sn').value=cfg.name;$('#sv').value=cfg.vol;optT($('#sl'),cfg.lobby);optT($('#sm'),cfg.match);go('menu')})();
 </script></body></html>
