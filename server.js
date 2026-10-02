@@ -18,7 +18,7 @@ const srv=http.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0]
  r.writeHead(200,{'Content-Type':ct,'Accept-Ranges':'bytes','Content-Length':sz});fs.createReadStream(f).pipe(r)});
 const send=(w,o)=>w&&w.readyState==1&&w.send(JSON.stringify(o));
 const rnd=()=>{const c=CARDS.map(()=>0),l=[];while(l.length<N){const i=Math.random()*CARDS.length|0;if(c[i]<MX){c[i]++;l.push(i)}}return l};
-const lobby=r=>r.ws.forEach((w,i)=>send(w,{t:'lobby',code:r.code,mode:r.mode,n:r.n,names:r.ws.map(x=>x.name),host:i==0}));
+const lobby=r=>r.ws.forEach((w,i)=>send(w,{t:'lobby',code:r.code,mode:r.mode,n:r.n,names:r.ws.map(x=>x.name),teams:r.ws.map(x=>x.team),host:i==0,me:i}));
 function reward(r){const g=r.g;if(r.rewarded||g.over==null)return;r.rewarded=true;if(!r.hs||r.hs.length<2)return;
  r.hs.forEach(w=>{if(!w.pid)return;const p=P[w.pid]||(P[w.pid]={name:w.name,rating:0,wins:0,games:0});p.name=w.name;
   const win=!w.left&&g.over==g.p[w.k].team,dr=!w.left&&g.over==-1,dl=win?25:dr?0:-15;p.games++;if(win)p.wins++;p.rating=Math.max(0,p.rating+dl);
@@ -29,7 +29,7 @@ function pump(r){const g=r.g;clearTimeout(r.tm);if(g.over!=null||r.seat[g.t])ret
 const validDeck=c=>Array.isArray(c)&&c.length==CARDS.length&&c.every(n=>Number.isInteger(n)&&n>=0&&n<=MX)&&c.reduce((a,b)=>a+b,0)==N;
 function startGame(r){const n=r.n,hs=r.ws;r.seat=Array.from({length:n},(_,i)=>hs[i]||null);hs.forEach((w,i)=>w.k=i);r.hs=hs.slice();r.rewarded=false;
  const names=r.seat.map((w,i)=>w?w.name:'Бот '+(i+1));
- hs.forEach(w=>w.deck=null);r.g=E.create(r.mode,names);r.avs=r.seat.map(w=>w?w.av:'');r.afs=r.seat.map(w=>w?w.af:'');r.seat.forEach(w=>w&&send(w,{t:'avs',a:r.avs,f:r.afs}));push(r)}
+ hs.forEach(w=>w.deck=null);const teams=[];r.seat.forEach((w,i)=>{if(w)teams[i]=w.team?1:0});r.seat.forEach((w,i)=>{if(!w){const c=[0,1].map(x=>teams.filter(y=>y===x).length);teams[i]=c[0]<=c[1]?0:1}});r.g=E.create(r.mode,names,teams);r.avs=r.seat.map(w=>w?w.av:'');r.afs=r.seat.map(w=>w?w.af:'');r.seat.forEach(w=>w&&send(w,{t:'avs',a:r.avs,f:r.afs}));push(r)}
 const wss=new WebSocketServer({server:srv});
 setInterval(()=>wss.clients.forEach(w=>{if(w.dead)return w.terminate();w.dead=true;w.ping()}),30000);
 wss.on('connection',ws=>{ws.on('error',()=>{});ws.dead=false;ws.on('pong',()=>ws.dead=false);
@@ -38,14 +38,15 @@ wss.on('connection',ws=>{ws.on('error',()=>{});ws.dead=false;ws.on('pong',()=>ws
   if(m.t=='top'){const all=Object.entries(P).map(([id,p])=>({id,...p})).sort((a,b)=>b.rating-a.rating||b.wins-a.wins),pid=cl(m.pid),i=all.findIndex(x=>x.id==pid);
    return send(ws,{t:'top',list:all.slice(0,30).map(p=>({name:p.name,rating:p.rating,wins:p.wins,games:p.games,me:p.id==pid})),me:i<0?null:{rank:i+1,rating:all[i].rating},total:all.length,online:wss.clients.size})}const r=ws.room;
   if(m.t=='create'||m.t=='join'){if(r)return;ws.name=cl(m.name)||'Игрок';ws.pid=cl(m.pid).slice(0,24);if(ws.pid){const q=P[ws.pid]||(P[ws.pid]={name:ws.name,rating:0,wins:0,games:0});q.name=ws.name;save()}ws.tok=String(m.tok||'').slice(0,20);ws.af=/^af\d{1,2}$/.test(m.af||'')?m.af:'';ws.av=/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(m.av||'')&&m.av.length<30000?m.av:'';
-   if(m.t=='create'){if(!E.MODES[m.mode])return;const M0=E.MODES[m.mode],nn=Math.max(M0.min,Math.min(M0.max,Math.floor(+m.n)||2));const code=Math.random().toString(36).slice(2,6).toUpperCase();ws.room=rooms[code]={code,mode:m.mode,n:nn,ws:[ws],g:null,seat:null,started:false,away:{},priv:!!m.priv};lobby(ws.room)}
+   if(m.t=='create'){if(!E.MODES[m.mode])return;const M0=E.MODES[m.mode],nn=Math.max(M0.min,Math.min(M0.max,Math.floor(+m.n)||2));const code=Math.random().toString(36).slice(2,6).toUpperCase();ws.room=rooms[code]={code,mode:m.mode,n:nn,ws:[ws],g:null,seat:null,started:false,away:{},priv:!!m.priv};ws.team=0;lobby(ws.room)}
    else{const j=rooms[String(m.code||'').toUpperCase()];if(!j||j.started||j.ws.length>=j.n)return send(ws,{t:'err',m:'Комната не найдена или уже занята'});
-    j.ws.push(ws);ws.room=j;lobby(j);if(j.ws.length==j.n){j.started=true;j.ws.forEach(w=>send(w,{t:'prematch'}))}}}
+    ws.team=j.ws.length%2;j.ws.push(ws);ws.room=j;lobby(j);if(j.ws.length==j.n){j.started=true;j.ws.forEach(w=>send(w,{t:'prematch'}))}}}
   else if(m.t=='rejoin'){if(r)return;const j=rooms[String(m.code||'').toUpperCase()],tok=String(m.tok||'').slice(0,20),a=j&&j.away[tok];
    if(!a||!j.g)return send(ws,{t:'err',m:'Партия уже недоступна'});clearTimeout(a.tm);delete j.away[tok];
    ws.room=j;ws.name=a.name;ws.av=a.av;ws.af=a.af;ws.pid=a.pid;ws.tok=tok;ws.k=a.k;j.hs=(j.hs||[]).map(w=>w.pid&&w.pid==ws.pid&&w.left?ws:w);j.seat[a.k]=ws;j.ws.push(ws);send(ws,{t:'avs',a:j.avs,f:j.afs});send(ws,{...E.view(j.g,a.k),hum:j.seat.filter(Boolean).length});
    j.ws.forEach(w=>w!==ws&&send(w,{t:'note',m:ws.name+' вернулся'}));pump(j)}
   else if(!r)return;
+  else if(m.t=='team'){if(!r.g||r.g.over!=null){ws.team=m.v?1:0;r.ws.forEach(w=>send(w,{t:'teams',names:r.ws.map(x=>x.name),teams:r.ws.map(x=>x.team)}))}}
   else if(m.t=='fill'){if(r.ws[0]!==ws||r.started)return;r.started=true;r.ws.forEach(w=>send(w,{t:'prematch'}))}
   else if(m.t=='deck'){if(!r.started||(r.g&&r.g.over==null))return;ws.deck=1;if(r.ws.every(w=>w.deck))startGame(r)}
   else if(r.g&&r.seat[ws.k]===ws&&E.act(r.g,ws.k,m))push(r)});
