@@ -131,6 +131,28 @@ section{overflow-y:auto}.logo{margin:3vh 0 1vh!important}.rules p{margin:0 0 10p
 .lunge{animation:lunge .4s!important}@keyframes lunge{0%,100%{scale:1}40%{scale:1.25}}
 .card.ds{box-shadow:0 0 0 3px #4d9bff,0 0 12px #4d9bff}.card.ds::after{content:'🛡';position:absolute;top:2px;right:3px;font-size:16px}
 .card.fz{filter:saturate(.4) brightness(1.25)}.card.fz::before{content:'❄️';position:absolute;top:2px;right:3px;font-size:18px;z-index:2}
+/* адаптивность: разные экраны, ПК, команды */
+:root{--bw:clamp(60px,min(23vw,13dvh),96px);--hw:clamp(60px,min(25vw,14dvh),100px);--ow:clamp(44px,min(16vw,8.5dvh),66px);--sw:clamp(40px,min(12.5vw,7dvh),54px)}
+html,body{-webkit-text-size-adjust:100%;overscroll-behavior:none;touch-action:manipulation}
+@supports(height:100dvh){html,body,section{height:100dvh}}
+input,select{font-size:16px}
+.card{--w:var(--bw)}#hand .card{--w:var(--hw)}.op .card{--w:var(--ow)}.op.side .card{--w:var(--sw)}
+.bd{min-height:calc(var(--bw)*1.42 + 14px)}.row,#T{overflow:visible!important}
+#gw{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+#dl{grid-auto-rows:max-content}.gart{aspect-ratio:4/5}.gart img{position:absolute;inset:0}.gc{cursor:zoom-in}
+#big{position:fixed;inset:0;background:#000e;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:12;padding:12px;text-align:center}#big.on{display:flex}
+#big img{max-width:min(94vw,720px);max-height:66dvh;object-fit:contain;border-radius:16px}#big .e{font-size:min(55vw,200px);line-height:1}
+.td{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.op{border-left:6px solid var(--tc,var(--bd))!important}#ph.me{border-left:6px solid var(--tc,var(--bd))}
+@media (max-height:560px){#C{display:none}.bd{min-height:0}h2{display:none}}
+@media (min-width:900px){
+:root{--bw:clamp(100px,min(8vw,17dvh),138px);--hw:clamp(104px,min(8.6vw,18dvh),146px);--ow:clamp(76px,min(6vw,11dvh),100px);--sw:clamp(66px,min(5.4vw,10dvh),84px)}
+section{max-width:620px}#game{max-width:1500px}#decks,#shop,#top,#rooms,#rules,#profile,#modes,#set{max-width:900px}
+#gw{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr) auto auto auto auto auto;grid-template-areas:"T T T" "L C R" "pb pb pb" "ph ph ph" "hand hand hand" "evt evt evt" "bar bar bar";gap:10px}
+#mr{display:contents}#T{grid-area:T}#L{grid-area:L;width:330px}#R{grid-area:R;width:330px}#C{grid-area:C;font-size:16px}#pb{grid-area:pb}#ph{grid-area:ph}#hand{grid-area:hand}#evt{grid-area:evt}#gw>.bar{grid-area:bar}
+.card .nm{font-size:14px}.card i{font-size:18px;min-width:30px;height:30px;line-height:30px}.hero{font-size:17px}#msg{font-size:15px}
+#dl{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}#dl.g2{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+}
 </style></head><body>
 <section id="menu"><div class="logo"><b>🃏</b><h1>Ash Ash Картi</h1><p>карточная битва мемов</p></div>
 <div class="dr" id="prof" data-go="profile" style="justify-content:space-between;cursor:pointer"></div>
@@ -142,10 +164,10 @@ section{overflow-y:auto}.logo{margin:3vh 0 1vh!important}.rules p{margin:0 0 10p
 <button data-go="menu">← Назад</button></section>
 <section id="lob"><h2>Комната <span id="lc" style="color:var(--gold)"></span></h2><p id="lm" style="text-align:center;color:var(--mut)"></p><div class="grow" id="ln"></div>
 <button class="p" id="fill">Заполнить ботами и начать</button><button id="lx">← Выйти</button></section>
-<section id="pre"><h2>Перед боем</h2><div>Музыка в матче</div><select id="pm"></select><div style="flex:1"></div>
+<section id="pre"><h2>Перед боем</h2><div id="tp" style="display:none"><div>Твоя команда</div><div class="tabs"><button data-tm="0">🔵 Синие</button><button data-tm="1">🔴 Красные</button></div><div id="tl2" style="font-size:13px;color:var(--mut);line-height:1.5"></div></div><div>Музыка в матче</div><select id="pm"></select><div style="flex:1"></div>
 <button class="p" id="go">В бой ⚔️</button><button id="px">← Назад</button></section>
 <section id="decks"><h2>Карточки</h2><p style="text-align:center;color:var(--mut);margin:0">Общая колода: карты приходят всем случайно</p><button id="vw">▦ Плитка</button><div class="grow" id="dl"></div><button class="p" data-go="menu">← Назад</button></section>
-<section id="shop"><h2>Магазин</h2><div id="wal" style="text-align:center;font-size:20px;font-weight:800"></div><div class="tabs"><button class="p" data-box="0">🎁 Обычный<small>🪙 120</small></button><button class="p" data-box="1">💜 Редкий<small>🪙 300</small></button><button class="p" data-box="2">👑 Золотой<small>🪙 650</small></button><button class="p" data-box="3">🔴 Мифический<small>🪙 1400</small></button></div><div class="grow" id="sl2"></div><button class="p" data-go="menu">← Назад</button></section>
+<section id="shop"><h2>Магазин</h2><div id="wal" style="text-align:center;font-size:20px;font-weight:800"></div><div class="tabs"><button class="p" data-box="0">🎁 Обычный<small>🪙 120</small></button><button class="p" data-box="1">💜 Редкий<small>🪙 260</small></button><button class="p" data-box="2">👑 Золотой<small>🪙 400</small></button><button class="p" data-box="3">🔴 Мифический<small>🪙 600</small></button></div><div class="grow" id="sl2"></div><button class="p" data-go="menu">← Назад</button></section>
 <section id="top"><h2>🏆 Рейтинг игроков</h2><div class="grow" id="tl"></div><button class="p" data-go="menu">← Назад</button></section>
 <section id="rooms"><h2>📋 Открытые комнаты</h2><div class="grow" id="rl"></div><button data-go="modes">← Назад</button></section>
 <section id="rules"><h2>❓ Правила</h2><div class="grow rules">
@@ -154,7 +176,7 @@ section{overflow-y:auto}.logo{margin:3vh 0 1vh!important}.rules p{margin:0 0 10p
 <p><b>Карты.</b> Существа (⚔️ атака / ❤️ здоровье) выходят на стол (до 7) и бьют со следующего хода. ⚡ Рывок — бьёт сразу. Здания (до 3) стоят у базы и дают бонус, но их можно разрушить. Заклинания срабатывают сразу и уходят.</p>
 <p><b>Атака.</b> Тапни свою готовую карту (жёлтая рамка), затем цель. Урон наносится обеим картам одновременно. <b>Базу и здания врага можно бить, только когда на его столе нет существ.</b> Союзников бить нельзя.</p>
 <p><b>События.</b> Каждые несколько раундов случается событие: взрыв, дождь, раж, разряд и другие. С 11-го раунда включается «затягивание»: базы теряют ❤️.</p>
-<p><b>Режимы.</b> Классика, Команды, Хаос, Блиц, Королевская битва, Рейд на босса, Мана-фест, Спринт, Бустер-вечеринка, Лавовый пол, Марафон. В каждом можно играть от 2 до 8 игроков: пустые места занимают боты.</p><p><b>Бустеры и свойства.</b> 🛡 щит блокирует первый удар, ☠️ яд убивает любую карту, 🩸 вампир лечит базу, ⚡ рывок бьёт сразу. Здания дают пассив (мана, лечение, урон, карты). Заклинания: броня, тренировка, заморозка 🧊, кража, клон, молния ⚡, скидка. Подробности смотри в «Карточках» или зажми карту в игре.</p>
+<p><b>Режимы.</b> Классика, Команды, Хаос, Блиц, Королевская битва, Рейд на босса, Мана-фест, Спринт, Бустер-вечеринка, Лавовый пол, Марафон. В каждом можно играть от 2 до 4 игроков: пустые места занимают боты. В режиме «Команды» ты выбираешь синюю или красную команду, цвета подсвечены в игре.</p><p><b>Бустеры и свойства.</b> 🛡 щит блокирует первый удар, ☠️ яд убивает любую карту, 🩸 вампир лечит базу, ⚡ рывок бьёт сразу. Здания дают пассив (мана, лечение, урон, карты). Заклинания: броня, тренировка, заморозка 🧊, кража, клон, молния ⚡, скидка. Подробности смотри в «Карточках» или зажми карту в игре.</p>
 <p><b>Награды.</b> За матчи даются монеты 🪙 (лутбоксы и косметика в магазине). Рейтинг ⭐ меняется только в онлайне против людей: победа +25, поражение −15. Выход из матча считается поражением.</p>
 </div><button class="p" data-go="menu">← Назад</button></section>
 <section id="profile"><h2>Профиль</h2>
@@ -166,9 +188,9 @@ section{overflow-y:auto}.logo{margin:3vh 0 1vh!important}.rules p{margin:0 0 10p
 <button class="p" data-go="shop">🛍 В магазин</button><button class="p" data-go="menu">← Назад</button></section>
 <section id="set"><h2>Настройки</h2><div class="bar"><input type="checkbox" id="sfxc" style="width:auto"><span>Звуковые эффекты карт</span></div><div class="bar"><input type="checkbox" id="hnt" style="width:auto"><span>Подсказки в игре</span></div><div>Громкость</div><input id="sv" type="range" min="0" max="1" step=".05">
 <div>Музыка в лобби</div><select id="sl"></select><div>Музыка в матче по умолчанию</div><select id="sm"></select><div style="flex:1"></div><button class="p" data-go="menu">Готово</button></section>
-<section id="game"><div id="T"></div><div id="mr"><div id="L"></div><div id="C"></div><div id="R"></div></div><div id="pb" class="row bd"></div><div id="ph" class="hero me"></div><div id="hand" class="row"></div><div id="evt"></div>
-<div class="bar"><button id="mus">🎵</button><button id="hb">❓</button><div id="msg"></div><button class="p" id="endbtn">Конец хода</button></div></section>
-<svg id="arr"></svg><div id="fl2"></div>
+<section id="game"><div id="gw"><div id="T"></div><div id="mr"><div id="L"></div><div id="C"></div><div id="R"></div></div><div id="pb" class="row bd"></div><div id="ph" class="hero me"></div><div id="hand" class="row"></div><div id="evt"></div>
+<div class="bar"><button id="mus">🎵</button><button id="hb">❓</button><div id="msg"></div><button class="p" id="endbtn">Конец хода</button></div></div></section>
+<div id="big"></div><svg id="arr"></svg><div id="fl2"></div>
 <div id="box"><div class="bx"><div id="bt" style="font-size:22px;font-weight:800">Открываем…</div><div class="rw"><div class="mk"></div><div id="strip"></div></div><div id="bres"></div><button class="p" id="bok" style="display:none;width:100%">Забрать</button></div></div>
 <div id="tb"></div><div id="zoom"></div>
 <div id="tut"><div class="tb2"><h2>Как играть</h2><p>👆 <b>1. Играй карты.</b> Тапни карту в руке со светящейся рамкой: на неё хватает маны.</p><p>⚔️ <b>2. Атакуй.</b> Тапни свою светящуюся карту на столе, затем цель: карту врага или его базу.</p><p>🛡 <b>3. База защищена,</b> пока на столе врага есть карты. Когда там пусто, просто тапни базу врага: игра сама ударит твоей сильнейшей готовой картой.</p><p>⏭ <b>4. Закончил?</b> Нажми «Конец хода». Мана копится, можно не тратить всё сразу.</p><p>🔍 <b>Совет:</b> зажми любую карту, чтобы увидеть её крупно и прочитать эффект.</p><p style="color:var(--mut)">🔷 мана (цена) · ⚔️ атака · ❤️ здоровье · 🎲 раундов до события</p><button class="p" id="tok" style="width:100%">Понятно!</button></div></div>
@@ -231,18 +253,21 @@ document.addEventListener('pointerdown',()=>{if(!AC.on){AC.on=1;if(!G)playM(cfg.
 const optT=(sel,v)=>{sel.innerHTML=TR.map((t,i)=>muOwn(i)?`<option value="${i}">${t.n}</option>`:'').join('');sel.value=v};
 const ic=c=>c[5]?`<img class="ic" src="${c[5]}">`:`<span class="ic">${c[1]}</span>`;
 function drawCards(){$('#dl').innerHTML=CARDS.map(c=>{const f=c[6]&&E.FX[c[6]],k=f?f.k:'m',r=c[2]>6?3:c[2]>4?2:c[2]>2?1:0;
- return`<div class="gc r${r}"><div class="gart">${c[5]?`<img src="${c[5]}">`:c[1]}<i class="cost">${c[2]}</i></div><div class="gn">${esc(c[0])}</div><div class="gs">${k=='m'?`<b class="a">⚔️ ${c[3]}</b>`:''}${k!='s'?`<b class="h">❤️ ${c[4]}</b>`:''}<b class="m">🔷 ${c[2]}</b></div><div class="gd">${f?f.d:'Существо: атакует и отвечает ударом'}</div></div>`}).join('')}
+ return`<div class="gc r${r}" data-ci="${CARDS.indexOf(c)}"><div class="gart">${c[5]?`<img src="${c[5]}">`:c[1]}<i class="cost">${c[2]}</i></div><div class="gn">${esc(c[0])}</div><div class="gs">${k=='m'?`<b class="a">⚔️ ${c[3]}</b>`:''}${k!='s'?`<b class="h">❤️ ${c[4]}</b>`:''}<b class="m">🔷 ${c[2]}</b></div><div class="gd">${f?f.d:'Существо: атакует и отвечает ударом'}</div></div>`}).join('')}
 $('#vw').onclick=()=>{$('#dl').classList.toggle('g2');$('#vw').textContent=$('#dl').classList.contains('g2')?'▢ Крупно':'▦ Плитка'};
+$('#dl').onclick=e=>{const g=e.target.closest('[data-ci]');if(!g)return;const c=CARDS[+g.dataset.ci],f=c[6]&&E.FX[c[6]],k=f?f.k:'m';
+ $('#big').innerHTML=(c[5]?`<img src="${c[5]}">`:`<div class="e">${c[1]}</div>`)+`<div class="gn" style="font-size:24px">${esc(c[0])}</div><div class="gs">${k=='m'?`<b class="a">⚔️ ${c[3]}</b>`:''}${k!='s'?`<b class="h">❤️ ${c[4]}</b>`:''}<b class="m">🔷 ${c[2]}</b></div><div class="gd" style="color:#cfd3e6;font-size:15px">${f?f.d:'Существо: атакует и отвечает ударом'}</div>`;$('#big').classList.add('on')};
+$('#big').onclick=()=>$('#big').classList.remove('on');
 /* ---- меню ---- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;const t=b.dataset.go;
  if(t=='bot'||t=='online'){kind=t;$('#mt').textContent=t=='bot'?'Игра с ботами':'Онлайн: создай комнату';$('#jn').style.display=$('#pl').style.display=t=='online'?'':'none';$('#le').textContent='';drawModes();go('modes')}
  else if(t=='profile'){drawProfile();go('profile')}else if(t=='top'){go('top');loadTop()}else if(t=='rooms'){go('rooms');refreshRooms()}else if(t=='shop'){drawShop();go('shop')}else if(t=='decks'){drawCards();go('decks')}else go(t)});
-function drawModes(){$('#np').innerHTML=[2,3,4,5,6,7,8].map(n=>`<button data-n="${n}" class="${n==nSel?'on':''}">${n}</button>`).join('');
+function drawModes(){$('#np').innerHTML=[2,3,4].map(n=>`<button data-n="${n}" class="${n==nSel?'on':''}">${n}</button>`).join('');
  $('#ml').innerHTML=Object.entries(E.MODES).map(([k,m])=>`<button class="mode" data-m="${k}" ${nSel<m.min||nSel>m.max?'disabled':''}>${m.name}<small>${m.d} · ${m.min}–${m.max} игроков</small></button>`).join('')}
 $('#np').onclick=e=>{const b=e.target.closest('[data-n]');if(b){nSel=+b.dataset.n;cfg.n=nSel;SV('cfg',cfg);drawModes()}};
 $('#ml').onclick=async e=>{const b=e.target.closest('[data-m]');if(!b)return;mode=b.dataset.m;if(kind=='bot')return openPre();return sendOn({t:'create',priv:$('#pv').checked,mode,n:nSel,name:myName(),pid:PID,tok:TOK,av:cfg.avatar||'',af:prof.af})};
 $('#jb').onclick=()=>sendOn({t:'join',code:$('#ci').value,name:myName(),pid:PID,tok:TOK,av:cfg.avatar||'',af:prof.af});
-function openPre(){$('#go').disabled=false;$('#go').textContent='В бой ⚔️';optT($('#pm'),cfg.match);go('pre')}
+function openPre(){drawTeams();$('#go').disabled=false;$('#go').textContent='В бой ⚔️';optT($('#pm'),cfg.match);go('pre')}
 $('#pm').onchange=()=>{cfg.match=+$('#pm').value;SV('cfg',cfg)};
 $('#px').onclick=()=>{if(online)leave();else go('modes')};
 $('#go').onclick=()=>{if(online){tx({t:'deck'});$('#go').disabled=true;$('#go').textContent='Ждём остальных…'}else startOff()};
@@ -328,7 +353,7 @@ function showProf(){const r=prof.rating,t=r<100?'Новичок':r<250?'Мемо
 function award(){const n=S.p.length,mu=n>2?1.5:1,real=online&&(S.hum||0)>=2,w=S.over=='win',d=S.over=='draw',
  coins=Math.round((real?(w?40:d?15:10):(w?15:d?5:3))*mu);prof.coins+=coins;prof.games++;if(w)prof.wins++;SV('prof',prof);sfx(w?'win':d?'end':'lose');
  return`+${coins} 🪙`+(real?' · ⭐ считаем…':' · рейтинг растёт только онлайн против людей')}
-const BOX=[{c:120,m:0,k:.25,pr:[30,60,90,150],b:1},{c:300,m:200,k:.1,pr:[150,250,400],b:2},{c:650,m:350,k:.05,pr:[500,800,1200],b:3},{c:1400,m:450,k:.03,pr:[1000,1500,2500],b:6}],WR=[60,25,10,4,1];
+const BOX=[{c:120,m:0,k:.2,pr:[60,120,240],b:1},{c:260,m:200,k:.1,pr:[130,260,520],b:2},{c:400,m:350,k:.07,pr:[200,400,800],b:3},{c:600,m:450,k:.05,pr:[300,600,1200],b:6}],WR=[60,25,10,4,1];
 const tile=it=>{const r=it.coin?RAR[0]:RAR[rl(it.p)];return`<div class="rt" style="--rc:${r.c}">${it.coin?`<span style="font-size:40px">🪙</span><small>+${it.coin}</small>`:it.em?`<span>${it.em}</span><small>${it.n}</small>`:`<span class="sw" style="background:${it.css}"></span><small>${it.n}</small>`}</div>`};
 function openBox(bi){const B=BOX[bi];if(prof.coins<B.c)return pop('#evb','<div class="e1">🪙</div><div class="e2">Не хватает монет: нужно '+B.c+'</div>');prof.coins-=B.c;
  let un=SHOP.filter(x=>x.p>=Math.max(B.m,1)&&!prof.own.includes(x.id));if(!un.length)un=SHOP.filter(x=>x.p>0&&!prof.own.includes(x.id));let prize;
@@ -384,14 +409,26 @@ function retry(){if(++tries>8)return finish('Связь потеряна');$('#m
 const tx=o=>ws&&ws.readyState==1&&ws.send(JSON.stringify(o));
 function leave(){manual=true;tries=0;SS('room',null);if(ws)ws.close();ws=null;online=false;S=null;go('menu');playM(cfg.lobby)}
 function on(m){
- if(m.t=='lobby'){clearTimeout(AC.w);$('#le').textContent='';SS('room',m.code);$('#lc').textContent=m.code;$('#lm').textContent=E.MODES[m.mode].name+' · '+m.names.length+'/'+m.n+' игроков · отправь код друзьям';$('#fill').style.display=m.host?'':'none';
-  $('#ln').innerHTML=m.names.map((n,i)=>`<div class="dr"><span class="n">${i+1}. ${esc(n)}</span></div>`).join('');go('lob')}
+ if(m.t=='lobby'){mode=m.mode;LT=m;myTeam=(m.teams&&m.teams[m.me])||0;clearTimeout(AC.w);$('#le').textContent='';SS('room',m.code);$('#lc').textContent=m.code;$('#lm').textContent=E.MODES[m.mode].name+' · '+m.names.length+'/'+m.n+' игроков · отправь код друзьям';$('#fill').style.display=m.host?'':'none';
+  $('#ln').innerHTML=m.names.map((n,i)=>`<div class="dr"><span class="n">${E.MODES[m.mode].pick?`<i class="td" style="background:${tcol(m.teams[i])}"></i>`:''}${i+1}. ${esc(n)}</span></div>`).join('');go('lob')}
  else if(m.t=='prematch')openPre();else if(m.t=='err'){$('#le').textContent=m.m;if(S&&$('#game').style.display=='flex')finish(m.m)}
- else if(m.t=='reward'){prof.rating=m.rating;SV('prof',prof);awText=awText.replace(' · ⭐ считаем…','')+` · ${m.delta>=0?'+':''}${m.delta} ⭐`;const q=$('#endt small');if(q)q.textContent=awText}else if(m.t=='top')showTop(m);else if(m.t=='list')showRooms(m.rooms);else if(m.t=='avs'){AV=m.a;AF=m.f||[];evKey='';awd=false;seen=null;lastCur=-1;if(S)render()}else if(m.t=='note')$('#msg').textContent=m.m;
+ else if(m.t=='teams'){LT=m;drawTeams()}else if(m.t=='reward'){prof.rating=m.rating;SV('prof',prof);awText=awText.replace(' · ⭐ считаем…','')+` · ${m.delta>=0?'+':''}${m.delta} ⭐`;const q=$('#endt small');if(q)q.textContent=awText}else if(m.t=='top')showTop(m);else if(m.t=='list')showRooms(m.rooms);else if(m.t=='avs'){AV=m.a;AF=m.f||[];evKey='';awd=false;seen=null;lastCur=-1;if(S)render()}else if(m.t=='note')$('#msg').textContent=m.m;
  else if(m.t=='state'){locked=false;const first=!S||G===null&&$('#game').style.display!='flex';S=m;sel=null;if(first){go('game');playM(cfg.match)}render()}}
 $('#fill').onclick=()=>tx({t:'fill'});$('#lx').onclick=leave;
 /* ---- игра ---- */
-function startOff(){const n=nSel;evKey='';awd=false;seen=null;lastCur=-1;G=E.create(mode,[myName(),...Array.from({length:n-1},(_,i)=>'Бот '+(i+1))]);online=false;AV=[cfg.avatar||''];AF=[prof.af];go('game');playM(cfg.match);sync()}
+const TC=['#3e8bff','#ff5a5f','#2ecc71','#ffd54a'],tcol=t=>TC[(t||0)%4];let LT=null,myTeam=0;
+const balT=(n,my)=>{const t=[my];for(let i=1;i<n;i++){const c=[0,1].map(x=>t.filter(y=>y==x).length);t.push(c[0]<=c[1]?0:1)}return t};
+function drawTeams(){const p=E.MODES[mode]&&E.MODES[mode].pick;$('#tp').style.display=p?'':'none';if(!p)return;
+ document.querySelectorAll('[data-tm]').forEach(b=>b.classList.toggle('on',+b.dataset.tm==myTeam));
+ const g=[[],[]];if(online&&LT&&LT.names)LT.names.forEach((n,i)=>g[LT.teams[i]?1:0].push(n));else g[myTeam].push(cfg.name);
+ $('#tl2').innerHTML=[0,1].map(t=>`<i class="td" style="background:${tcol(t)}"></i>${t?'Красные':'Синие'}: ${g[t].map(esc).join(', ')||'—'}`).join('<br>')+'<br>Боты займут места так, чтобы команды были ровнее'}
+document.querySelectorAll('[data-tm]').forEach(b=>b.onclick=()=>{myTeam=+b.dataset.tm;if(online)tx({t:'team',v:myTeam});drawTeams()});
+function fitRows(){document.querySelectorAll('#gw .row').forEach(row=>{const k=[...row.children];k.forEach(c=>{c.style.removeProperty('--w');c.style.marginLeft=''});const n=k.length;if(n<2||row.closest('.side'))return;
+ const W=row.clientWidth-2,gap=5;let w=k[0].getBoundingClientRect().width;
+ if(n*w+(n-1)*gap>W){w=Math.max(row.id=='hand'?54:row.id=='pb'?58:40,(W-(n-1)*gap)/n);k.forEach(c=>c.style.setProperty('--w',w+'px'))}
+ const tot=n*w+(n-1)*gap;if(tot>W+1){const ov=(tot-W)/(n-1);k.forEach((c,i)=>{if(i)c.style.marginLeft=(-ov)+'px'})}})}
+window.addEventListener('resize',()=>{if(S&&$('#game').style.display=='flex')fitRows()});
+function startOff(){const n=nSel;evKey='';awd=false;seen=null;lastCur=-1;G=E.create(mode,[myName(),...Array.from({length:n-1},(_,i)=>'Бот '+(i+1))],balT(n,myTeam));online=false;AV=[cfg.avatar||''];AF=[prof.af];go('game');playM(cfg.match);sync()}
 function sync(){if(!G)return;S=E.view(G,0);sel=null;render();if(G.over==null&&G.t!=0)setTimeout(()=>{if(G&&G.over==null&&G.t!=0){E.act(G,G.t,E.bot(G,G.t));sync()}},850)}
 function doAct(m){if(online){if(locked)return;locked=true;setTimeout(()=>locked=false,1500);sel=null;tx(m)}else if(E.act(G,0,m))sync()}
 const kd=c=>c.fx&&E.FX[c.fx]?E.FX[c.fx].k:'m';
@@ -403,18 +440,18 @@ function bigEv(){const k=S.evt?S.round+'|'+S.evt:'';if(!k||k==evKey){if(!k)evKey
 function render(){const me=S.p[S.you],my=S.cur==S.you;DMG={};const cu={};S.p.forEach(o=>[...o.board,...o.bld].forEach(c=>{cu[c.id]=c.h;if(PREV[c.id]>c.h)DMG[c.id]=PREV[c.id]-c.h}));PREV=cu;fxOnce();
  const n=S.p.length,m=n-1,pos=Array.from({length:m},(_,k)=>m==1?'T':k==0?'L':k==m-1?'R':'T'),nt=pos.filter(x=>x=='T').length,H={T:'',L:'',R:''},rdyAny=my&&me.board.some(c=>c.rdy),hintB=o=>rdyAny&&sel==null&&!o.dead&&o.team!=me.team&&!o.board.length,selA=sel!=null&&me.board[sel]?me.board[sel].a:0;
  for(let d=1;d<n;d++){const i=(S.you+d)%n,o=S.p[i],sd=pos[d-1]!='T',can=sel!=null&&!o.dead&&o.team!=me.team,free=can&&!o.board.length;
-  H[pos[d-1]]+=`<div class="op ${sd?'side':''} ${nt>1?'tw':''} ${S.cur==i?'cur':''} ${o.dead?'dead':''}"><div class="hero ${free?'tgt':''}${hintB(o)?' hint':''}" data-z="eh" data-p="${i}"><span>${av(i)} ${o.team==me.team?'🤝':''}${o.dead?'☠️':''}${esc(o.name)} ❤️${o.hp}</span><small>🔷${o.mana}/${o.max} 🃏${o.hand}</small></div>${free?`<button class="atkb" data-z="eh" data-p="${i}">💥 АТАКОВАТЬ БАЗУ (−${selA} ❤️)</button>`:''}<div class="bl">${o.bld.map((b,j)=>`<span class="chip ${free?'tgt':''}" data-z="eB" data-i="${j}" data-p="${i}" data-id="${b.id}">${b.e}${b.h}</span>`).join('')}</div><div class="row">${o.board.map((c,j)=>cardH(c,'eb',j,i,can?'tgt':'')).join('')}</div></div>`}
+  H[pos[d-1]]+=`<div class="op ${sd?'side':''} ${nt>1?'tw':''} ${S.cur==i?'cur':''} ${o.dead?'dead':''}" style="--tc:${tcol(o.team)}"><div class="hero ${free?'tgt':''}${hintB(o)?' hint':''}" data-z="eh" data-p="${i}"><span><i class="td" style="background:${tcol(o.team)}"></i>${av(i)} ${o.team==me.team?'🤝':''}${o.dead?'☠️':''}${esc(o.name)} ❤️${o.hp}</span><small>🔷${o.mana}/${o.max} 🃏${o.hand}</small></div>${free?`<button class="atkb" data-z="eh" data-p="${i}">💥 АТАКОВАТЬ БАЗУ (−${selA} ❤️)</button>`:''}<div class="bl">${o.bld.map((b,j)=>`<span class="chip ${free?'tgt':''}" data-z="eB" data-i="${j}" data-p="${i}" data-id="${b.id}">${b.e}${b.h}</span>`).join('')}</div><div class="row">${o.board.map((c,j)=>cardH(c,'eb',j,i,can?'tgt':'')).join('')}</div></div>`}
  $('#T').innerHTML=H.T;['L','R'].forEach(k=>{$('#'+k).innerHTML=H[k];$('#'+k).style.display=H[k]?'block':'none'});
- $('#C').innerHTML=`<div>Раунд ${S.round}</div><b>▶ ${esc(S.p[S.cur].name)}</b><div>📚 Общая колода: ${S.deck}</div><small>${S.last?esc(S.last.txt||''):''}</small>`;
+ const tm={};S.p.forEach(o=>(tm[o.team]=tm[o.team]||[]).push(o.name));const multi=Object.values(tm).some(a=>a.length>1);$('#C').innerHTML=`<div>Раунд ${S.round}</div><b>▶ ${esc(S.p[S.cur].name)}</b><div>📚 Общая колода: ${S.deck}</div>${multi?'<div style="text-align:left">'+Object.entries(tm).map(([t,a])=>`<div><i class="td" style="background:${tcol(+t)}"></i>${a.map(esc).join(', ')}</div>`).join('')+'</div>':''}<small>${S.last?esc(S.last.txt||''):''}</small>`;
  $('#pb').innerHTML=me.board.map((c,i)=>cardH(c,'pb',i,S.you,(c.rdy&&my?'ok ':'')+(sel===i?'sel':''))).join('');
- $('#ph').innerHTML=`<span>${av(S.you)} ${esc(me.name)} ❤️ ${me.hp}</span><span class="bl">${me.bld.map((b,j)=>`<span class="chip" data-z="mB" data-i="${j}" data-p="${S.you}" data-id="${b.id}">${b.e}${b.h}</span>`).join('')}</span><small>🔷 ${me.mana}/${me.max} (+${me.regen}) · 🎲 ${S.ev-S.round%S.ev}</small>`;
+ $('#ph').innerHTML=`<span><i class="td" style="background:${tcol(me.team)}"></i>${av(S.you)} ${esc(me.name)} ❤️ ${me.hp}</span><span class="bl">${me.bld.map((b,j)=>`<span class="chip" data-z="mB" data-i="${j}" data-p="${S.you}" data-id="${b.id}">${b.e}${b.h}</span>`).join('')}</span><small>🔷 ${me.mana}/${me.max} (+${me.regen}) · 🎲 ${S.ev-S.round%S.ev}</small>`;
  $('#hand').innerHTML=me.hand.map((c,i)=>cardH(c,'hand',i,S.you,c.c<=me.mana&&my?'ok':'dim')).join('');
  $('#evt').textContent=S.evt?'Событие: '+S.evt:'';
  const canPlay=my&&me.hand.some(c=>c.c<=me.mana&&(kd(c)=='m'?me.board.length<7:kd(c)=='b'?me.bld.length<3:true)),canAtk=my&&me.board.some(c=>c.rdy),baseOpen=S.p.some(o=>!o.dead&&o.team!=me.team&&!o.board.length);
  $('#msg').textContent=me.dead?'Ты выбыл(а): наблюдай за игрой':!my?'⏳ Ходит '+S.p[S.cur].name+'…':cfg.hints===false?'Твой ход':sel!=null?'🎯 Тапни цель: карту врага или его базу (базу можно бить, если на столе врага пусто)':canAtk&&baseOpen?'🎯 На столе врага пусто! Тапни его базу: она открыта для удара прямо сейчас':canPlay&&canAtk?'👆 Сыграй светящуюся карту из руки или ⚔️ атакуй светящейся картой на столе':canPlay?'👆 Сыграй светящуюся карту из руки (на неё хватает маны)':canAtk?'⚔️ Тапни свою светящуюся карту на столе, потом цель':'✅ Ходов больше нет: нажми «Конец хода»';
- $('#endbtn').disabled=!my;$('#endbtn').classList.toggle('pulse',my&&!canPlay&&!canAtk&&!S.over);$('#game').classList.toggle('my',my&&!S.over);$('#ph').classList.toggle('mt',my&&!S.over);
+ $('#endbtn').disabled=!my;$('#endbtn').classList.toggle('pulse',my&&!canPlay&&!canAtk&&!S.over);$('#game').classList.toggle('my',my&&!S.over);$('#ph').classList.toggle('mt',my&&!S.over);$('#ph').style.setProperty('--tc',tcol(me.team));
  if(my&&lastCur!=S.you&&!S.over){pop('#tb','✨ Твой ход!');sfx('turn')}lastCur=S.cur;
- applyHit();bigEv();if(S.over){if(!awd){awd=true;awText=award()}finish({win:'Победа! 🎉',lose:'Поражение 💀',draw:'Ничья 🤝'}[S.over]+'<br><small style="color:var(--gold);font-size:16px">'+awText+'</small>')}}
+ fitRows();applyHit();bigEv();if(S.over){if(!awd){awd=true;awText=award()}finish({win:'Победа! 🎉',lose:'Поражение 💀',draw:'Ничья 🤝'}[S.over]+'<br><small style="color:var(--gold);font-size:16px">'+awText+'</small>')}}
 function finish(t){$('#endt').innerHTML=t;$('#again').style.display=S&&S.over?'':'none';$('#end').style.display='flex'}
 $('#again').onclick=()=>{$('#end').style.display='none';G=null;S=null;openPre()};
 $('#exit').onclick=()=>{$('#end').style.display='none';G=null;leave()};
@@ -437,5 +474,5 @@ document.addEventListener('click',e=>{if(lp){lp=false;return}if(!S||S.over)retur
 setInterval(()=>{if(ws&&ws.readyState==1)tx({t:'ping'})},25000);
 /* ---- запуск ---- */
 (async()=>{CARDS=await(await fetch('cards.json')).json();E.setCards(CARDS);
- cfg={name:'Игрок',vol:.5,lobby:0,match:1,...LS('cfg',{})};prof={coins:0,rating:0,wins:0,games:0,own:['bg0','fr0','bd0'],bg:'bg0',fr:'fr0',bd:'bd0',cs:'cs0',af:'af0',fx:'fx0',...LS('prof',{})};['bd0','cs0','af0','fx0'].forEach(x=>{if(!prof.own.includes(x))prof.own.push(x)});await loadMusic();nSel=cfg.n||2;showAv();$('#sfxc').checked=cfg.sfx!==false;$('#hnt').checked=cfg.hints!==false;$('#sn').value=cfg.name;$('#sv').value=cfg.vol;optT($('#sl'),cfg.lobby);optT($('#sm'),cfg.match);go('menu')})();
+ cfg={name:'Игрок',vol:.5,lobby:0,match:1,...LS('cfg',{})};prof={coins:0,rating:0,wins:0,games:0,own:['bg0','fr0','bd0'],bg:'bg0',fr:'fr0',bd:'bd0',cs:'cs0',af:'af0',fx:'fx0',...LS('prof',{})};['bd0','cs0','af0','fx0'].forEach(x=>{if(!prof.own.includes(x))prof.own.push(x)});await loadMusic();nSel=Math.min(4,Math.max(2,cfg.n||2));showAv();$('#sfxc').checked=cfg.sfx!==false;$('#hnt').checked=cfg.hints!==false;$('#sn').value=cfg.name;$('#sv').value=cfg.vol;optT($('#sl'),cfg.lobby);optT($('#sm'),cfg.match);go('menu')})();
 </script></body></html>
