@@ -9,18 +9,18 @@ steal:{k:'s',d:'🕵️ Заклинание: украсть карту из р�
 const kind=c=>c.fx&&FX[c.fx]?FX[c.fx].k:'m';
 const range=n=>Array.from({length:n},(_,i)=>i),HP=[0,0,20,18,15,14,13,12,12];
 const MODES={
-classic:{name:'Классика',d:'Каждый сам за себя, побеждает последний выживший',min:2,max:8,mk:n=>({team:range(n),hp:HP[n],ev:3})},
-team:{name:'Команды',d:'Две команды по очереди мест, союзников бить нельзя',min:3,max:8,mk:n=>({team:range(n).map(i=>i%2),hps:range(n).map(i=>HP[n]+(n%2&&i%2?5:0)),ev:3})},
-chaos:{name:'Хаос 🌪',d:'Событие каждый раунд, больше карт',min:2,max:8,mk:n=>({team:range(n),hp:HP[n]+5,ev:1,chaos:1})},
-blitz:{name:'Блиц ⚡',d:'12 ❤️ и много маны: быстрые партии',min:2,max:8,mk:n=>({team:range(n),hp:12,ev:2,reg:5})},
-royale:{name:'Королевская битва 👑',d:'Базы тают уже с 5-го раунда',min:3,max:8,mk:n=>({team:range(n),hp:12,ev:2,sd:4})},
-boss:{name:'Рейд на босса 👹',d:'Место 1 (босс) против всех: много ❤️ и доп. карта',min:2,max:8,mk:n=>({team:range(n).map(i=>i?1:0),hps:range(n).map(i=>i?15:15+10*(n-1)),xd:range(n).map(i=>i?0:1),reg:4,ev:3})},
-rich:{name:'Мана-фест 💰',d:'Большой запас маны и +6 в ход',min:2,max:8,mk:n=>({team:range(n),hp:HP[n],ev:3,reg:6,cap:8})}};
+classic:{name:'Классика',d:'Каждый сам за себя, побеждает последний выживший',min:2,max:4,mk:n=>({team:range(n),hp:HP[n],ev:3})},
+team:{name:'Команды',d:'Выбери команду (синие или красные), союзников бить нельзя',pick:1,min:3,max:4,mk:n=>({team:range(n).map(i=>i%2),hps:range(n).map(i=>HP[n]+(n%2&&i%2?5:0)),ev:3})},
+chaos:{name:'Хаос 🌪',d:'Событие каждый раунд, больше карт',min:2,max:4,mk:n=>({team:range(n),hp:HP[n]+5,ev:1,chaos:1})},
+blitz:{name:'Блиц ⚡',d:'12 ❤️ и много маны: быстрые партии',min:2,max:4,mk:n=>({team:range(n),hp:12,ev:2,reg:5})},
+royale:{name:'Королевская битва 👑',d:'Базы тают уже с 5-го раунда',min:3,max:4,mk:n=>({team:range(n),hp:12,ev:2,sd:4})},
+boss:{name:'Рейд на босса 👹',d:'Место 1 (босс) против всех: много ❤️ и доп. карта',min:2,max:4,mk:n=>({team:range(n).map(i=>i?1:0),hps:range(n).map(i=>i?15:15+10*(n-1)),xd:range(n).map(i=>i?0:1),reg:4,ev:3})},
+rich:{name:'Мана-фест 💰',d:'Большой запас маны и +6 в ход',min:2,max:4,mk:n=>({team:range(n),hp:HP[n],ev:3,reg:6,cap:8})}};
 Object.assign(MODES,{
-sprint:{name:'Спринт 🏃',d:'Все существа бьют сразу после выхода',min:2,max:8,mk:n=>({team:range(n),hp:HP[n],ev:3,allrush:1,reg:4})},
-party:{name:'Бустер-вечеринка 🎉',d:'В колоде в основном заклинания и здания',min:2,max:8,mk:n=>({team:range(n),hp:HP[n]+3,ev:2,party:1})},
-lava:{name:'Лавовый пол 🌋',d:'Базы горят с 2-го раунда: бей быстрее',min:2,max:8,mk:n=>({team:range(n),hp:25,ev:3,sd:1})},
-marathon:{name:'Марафон 🐢',d:'40 ❤️, мана копится медленно, долгие партии',min:2,max:8,mk:n=>({team:range(n),hp:40,ev:4,reg:2,sd:14})}});
+sprint:{name:'Спринт 🏃',d:'Все существа бьют сразу после выхода',min:2,max:4,mk:n=>({team:range(n),hp:HP[n],ev:3,allrush:1,reg:4})},
+party:{name:'Бустер-вечеринка 🎉',d:'В колоде в основном заклинания и здания',min:2,max:4,mk:n=>({team:range(n),hp:HP[n]+3,ev:2,party:1})},
+lava:{name:'Лавовый пол 🌋',d:'Базы горят с 2-го раунда: бей быстрее',min:2,max:4,mk:n=>({team:range(n),hp:25,ev:3,sd:1})},
+marathon:{name:'Марафон 🐢',d:'40 ❤️, мана копится медленно, долгие партии',min:2,max:4,mk:n=>({team:range(n),hp:40,ev:4,reg:2,sd:14})}});
 const build=(k,n)=>({n,...MODES[k].mk(n)});
 const nn=(v,d)=>Number.isFinite(+v)&&v!==''&&v!==null?+v:d;let UID=0;const mkc=i=>({id:++UID,n:String(C[i][0]),e:C[i][1],c:nn(C[i][2],1),a:nn(C[i][3],0),h:nn(C[i][4],1),img:C[i][5]||'',fx:C[i][6]||'',ds:C[i][6]=='shield',fz:0,rdy:false});
 const mkDeck=M=>{const nm=C.map((c,i)=>i).filter(i=>C[i][6]&&FX[C[i][6]]&&FX[C[i][6]].k!='m'),mi=C.map((c,i)=>i).filter(i=>!nm.includes(i));
@@ -52,7 +52,7 @@ function begin(g){const s=g.p[g.t];s.turns++;s.mana=Math.min(capOf(s),s.mana+(g.
  if(g.t==g.p.findIndex(x=>!x.dead)){g.round++;g.evt='';if(g.round%g.M.ev==0){const l=g.M.chaos?EV.concat(EVC):EV,x=l[Math.random()*l.length|0];x[1](g);g.evt=x[0]}
   {const sdr=g.M.sd!=null?g.M.sd:10;if(g.round>sdr){const dm=1+Math.floor((g.round-sdr-1)/4);each(g,q=>q.hp-=dm);if(!g.evt)g.evt='⏳ Затягивание: −'+dm+' ❤️ всем базам'}}}clean(g)}
 function next(g){do{g.t=(g.t+1)%g.M.n}while(g.p[g.t].dead);begin(g)}
-function create(mode,names){const M=build(mode,names.length),g={mode,M,p:[],t:0,round:0,evt:'',over:null,deck:[],seq:0,last:null};g.deck=mkDeck(M);
+function create(mode,names,teams){const M=build(mode,names.length);if(MODES[mode].pick&&Array.isArray(teams)&&new Set(teams.slice(0,M.n)).size>1){M.team=teams.slice(0,M.n).map(t=>t?1:0);const sz=[0,1].map(t=>M.team.filter(x=>x==t).length),mx=Math.max(...sz);M.hps=M.team.map(t=>HP[M.n]+5*(mx-sz[t]))}const g={mode,M,p:[],t:0,round:0,evt:'',over:null,deck:[],seq:0,last:null};g.deck=mkDeck(M);
  for(let k=0;k<M.n;k++)g.p.push({name:names[k],team:M.team[k],hp:M.hps?M.hps[k]:M.hp,c0:M.cap||4,mana:0,turns:0,dead:false,hand:[],board:[],bld:[]});
  g.p.forEach((s,k)=>{for(let i=0;i<(M.chaos?5:3)+(k==1&&M.n==2?1:0);i++)draw(g,s)});begin(g);return g}
 function act(g,k,m){if(g.over!=null||g.t!=k)return false;const a=g.p[k];
